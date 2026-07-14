@@ -1,0 +1,16 @@
+# Gitleaks config for playkit
+# useDefault is required so detection rules load (see ansible .gitleaks.toml note).
+
+title = "playkit gitleaks"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known false positives"
+paths = [
+  '''\.env\.example''',
+]
+regexes = [
+  '''\$\{[A-Za-z0-9_]+\}''',
+]

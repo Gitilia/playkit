@@ -1,0 +1,58 @@
+---
+# Homelab CI for @levkin/playkit
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  skip-ci-check:
+    runs-on: [homelab, self-hosted, linux]
+    container:
+      image: node:20-bookworm
+    outputs:
+      should-skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - id: check
+        run: |
+          SKIP=0
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          MSG="${GITHUB_EVENT_HEAD_COMMIT_MESSAGE:-$(git log -1 --pretty=%B 2>/dev/null || true)}"
+          echo "$BRANCH" "$MSG" | grep -qi '@skipci' && SKIP=1
+          echo "skip=$SKIP" >> $GITHUB_OUTPUT
+
+  build-and-test:
+    needs: skip-ci-check
+    if: needs.skip-ci-check.outputs.should-skip != '1'
+    runs-on: [homelab, self-hosted, linux]
+    container:
+      image: node:20-bookworm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  secret-scan:
+    needs: skip-ci-check
+    if: needs.skip-ci-check.outputs.should-skip != '1'
+    runs-on: [homelab, self-hosted, linux, heavy]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest \
+            detect --source /repo --no-banner --redact

@@ -1,0 +1,71 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "enable": true,
+        "expr": "playkit_action_ok{project=~\"$project\"}",
+        "name": "Playkit action failed",
+        "type": "classic_conditions"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Action duration (ms)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "playkit_action_duration_ms{project=~\"$project\", env=~\"$env\"}",
+          "legendFormat": "{{action}}"
+        }
+      ]
+    },
+    {
+      "title": "Action success (1=ok)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "playkit_action_ok{project=~\"$project\", env=~\"$env\"}",
+          "legendFormat": "{{action}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["playkit", "e2e"],
+  "templating": {
+    "list": [
+      {
+        "name": "project",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(playkit_action_duration_ms, project)",
+        "includeAll": true,
+        "current": { "text": "All", "value": "$__all" }
+      },
+      {
+        "name": "env",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(playkit_action_duration_ms, env)",
+        "includeAll": true,
+        "current": { "text": "All", "value": "$__all" }
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "title": "Playkit E2E overview",
+  "uid": "playkit-overview",
+  "version": 1
+}
