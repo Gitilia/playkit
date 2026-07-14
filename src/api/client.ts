@@ -1,5 +1,7 @@
 import { createLogger, type Logger } from '../logging/logger.js';
 import { redactSecrets } from '../logging/redact.js';
+import { assertSchema } from './schema.js';
+import type { z } from 'zod';
 
 export interface ApiClientOptions {
   baseUrl: string;
@@ -16,6 +18,8 @@ export interface ApiRequestOptions {
   body?: unknown;
   timeoutMs?: number;
   expectedStatus?: number | number[];
+  /** Optional Zod schema — response `data` is parsed/asserted when set. */
+  schema?: z.ZodType<unknown>;
 }
 
 export interface ApiResponse<T = unknown> {
@@ -109,6 +113,10 @@ export class ApiClient {
         data = text ? (JSON.parse(text) as T) : (undefined as T);
       } catch {
         data = text as unknown as T;
+      }
+
+      if (opts.schema) {
+        data = assertSchema(data, opts.schema as z.ZodType<T>, `${method} ${path}`);
       }
 
       const response: ApiResponse<T> = {

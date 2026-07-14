@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-07-14
+
+- **Zod schema asserts** — `assertSchema()` + optional `schema` on `ApiClient` requests
+- **storageState helpers** — `saveStorageState()`, `storageStateUse()`
+- **Trace-on-failure preset** — `playkitFailureArtifacts()` for Playwright `use`
+- Mailpit adapter marked shipped (was in 0.2.1)
+
 ## 0.2.1 — 2026-07-14
 
 - **Mailpit** client + `createMailInbox()` (prefer homelab Mailpit, else Mailtrap SaaS)

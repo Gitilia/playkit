@@ -19,6 +19,9 @@ export {
   waitForHidden,
   waitForUrlHost,
   assertPublicHost,
+  saveStorageState,
+  storageStateUse,
+  playkitFailureArtifacts,
   type ClickOptions,
   type FillOptions,
   type GotoOptions,
@@ -26,6 +29,8 @@ export {
 
 export {
   ApiClient,
+  assertSchema,
+  SchemaAssertionError,
   type ApiClientOptions,
   type ApiRequestOptions,
   type ApiResponse,

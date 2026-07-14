@@ -2,7 +2,7 @@
 
 Living plan for making `@levkin/playkit` more useful across Levkin repos.
 
-## Now (v0.2) — Mailtrap + prior kit
+## Now (v0.3) — shipped
 
 - [x] Browser helpers with retries (`click`, `fill`, `safeGoto`, visibility waits)
 - [x] `BasePage` for Page Objects
@@ -14,20 +14,19 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [x] Unit tests (vitest) + Gitea Actions CI
 - [x] Starter Grafana dashboard JSON
 - [x] Consumer docs + API/UI examples
-- [x] **Mailtrap / Email Testing adapter** — `waitForEmail`, link extraction (Kolby #56 class)
+- [x] **Mailtrap / Mailpit** — `createMailInbox()`, `waitForEmail`, link extraction
+- [x] **Auth storage state helpers** — `saveStorageState` / `storageStateUse`
+- [x] **Trace-on-failure preset** — `playkitFailureArtifacts()`
+- [x] **Schema assertions** — Zod `assertSchema` + `ApiClient` `schema` option
 
-## Next (v0.3) — high value
+## Next (v0.4) — high value
 
-- [ ] **Mailpit adapter** — same `waitForEmail` interface for local/homelab catch-all (no SaaS)
-- [ ] **Auth storage state helpers** — save/load Playwright `storageState` for admin vs viewer roles
-- [ ] **Trace-on-failure preset** — one-liner Playwright config merge (`trace: 'retain-on-failure'`, screenshot, video)
-- [ ] **Schema assertions** — optional Zod (or AJV) helpers on `ApiClient` responses
 - [ ] **Private Gitea npm registry publish** — `npm install @levkin/playkit` without git URLs
 - [ ] **Consumer template** — `npx @levkin/playkit init` scaffolding `e2e/` + CI snippet
-- [ ] **Deploy-smoke CLI** — `playkit smoke --project punimtag` post-deploy gate (health + public host + login)
+- [ ] **Deploy-smoke CLI** — `playkit smoke --project punimtag` post-deploy gate
 - [ ] **Retry policy presets** — flaky-network vs strict-CI profiles
 
-## Later (v0.4+) — professional polish
+## Later (v0.5+) — professional polish
 
 - [ ] **Web Vitals** (LCP/CLS/INP) collection via Playwright CDP + metrics labels
 - [ ] **A11y** — axe-core wrapper as optional peer
@@ -39,46 +38,3 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] **Infisical SDK helper** — `loadSecretsFromInfisical()` for local runs (machine identity)
 - [ ] **JUnit + HTML report merge** — single artifact for Gitea PR checks
 - [ ] **Network assert helpers** — fail if request hits `10.x` / wrong host after navigation
-
-## Ideas backlog (not scheduled)
-
-| Idea | Why |
-|------|-----|
-| Shared Page Object for Authentik login | Many apps share SSO |
-| Chaos toggles (throttle network, offline) | Catch brittle UIs |
-| Seeded persona library (`admin`, `viewer`, `unverified`) | Consistent fixtures across apps |
-| “Deploy smoke” CLI | Post-deploy one-command gate before paging humans |
-| Recorded HAR attach on API failure | Faster debugging |
-| Benchmark budgets in CI | Fail if p95 login > N ms |
-| Docs site (VitePress) with cookbook recipes | Onboarding other repos faster |
-| Email delivery probe (SMTP accept ≠ inbox) | Catch Spamhaus / bounce class of #56 |
-| `NEXTAUTH_URL` / canonical URL checker | Static env lint before e2e |
-| Tag-based suite filters (`@smoke`, `@auth`, `@mail`) | Fast PR vs nightly depth |
-| Parallel shard helper for self-hosted runners | Keep CI under 5m as suite grows |
-| Golden-path checklist generator | Per-app “must pass before claim fixed” |
-| Kuma + playkit correlation IDs | Tie synthetic monitor blips to e2e runs |
-| Diffable timing baselines in git | Spot regressions without Grafana |
-
-## Punimtag as first consumer
-
-1. [x] `e2e/` depending on `@levkin/playkit`
-2. [x] Specs: public host after sign-out; health API; forgot-password via Mailtrap
-3. [ ] CI secrets populated + scheduled DEV smoke
-4. Deploy rule: PR → green CI → merge → deploy script (no silent `pct exec` “done”)
-
-## Observability
-
-Pushgateway → Prometheus on LXC 240 (`observability` @ `10.0.10.24`) → Grafana dashboard `dashboards/playkit-overview.json`.
-
-Metrics (v0.1):
-
-- `playkit_action_duration_ms{project,env,action}`
-- `playkit_action_ok{project,env,action}`
-
-## Success criteria
-
-A bug like “sign-out redirects to LAN IP” or “email accepted by SMTP but bounced by Outlook” cannot be marked fixed without:
-
-1. Public-URL browser assertion (playkit host guards)
-2. Delivery/inbox assertion (mail adapter — v0.2) or documented mail-trap substitute
-3. Green consumer CI on the merge commit

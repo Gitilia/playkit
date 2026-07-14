@@ -11,3 +11,5 @@ export {
   type FillOptions,
   type GotoOptions,
 } from './actions.js';
+export { saveStorageState, storageStateUse } from './storageState.js';
+export { playkitFailureArtifacts } from './playwrightPreset.js';
