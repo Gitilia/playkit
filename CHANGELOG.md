@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-07-14
+
+- **Mailpit** client + `createMailInbox()` (prefer homelab Mailpit, else Mailtrap SaaS)
+
 ## 0.2.0 — 2026-07-14
 
 - **Mailtrap** Email Testing client: `MailtrapClient`, `waitForEmail`, `extractLinks` / `firstLinkMatching`

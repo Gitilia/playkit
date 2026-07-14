@@ -47,9 +47,17 @@ export {
 export {
   MailtrapClient,
   loadMailtrapConfig,
+  MailpitClient,
+  loadMailpitConfig,
+  createMailInbox,
+  readMailHtml,
   extractLinks,
   firstLinkMatching,
   type MailtrapConfig,
   type MailtrapMessage,
   type WaitForEmailOptions,
+  type MailpitConfig,
+  type MailpitMessage,
+  type WaitForMailpitOptions,
+  type MailInbox,
 } from './mail/index.js';
