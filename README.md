@@ -72,6 +72,27 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `createLogger` / `redactSecrets` | Structured JSON logs |
 | `TimingCollector` / `pushPrometheusMetrics` | Action timings → Prometheus Pushgateway → Grafana |
 | `createPlaykitRuntime` | One-shot config + logger + API + timings |
+| `MailtrapClient` / `waitForEmail` | Assert password-reset / verify emails in Mailtrap sandbox |
+
+## Mailtrap (email testing)
+
+```ts
+import { MailtrapClient, firstLinkMatching, assertPublicHost } from '@levkin/playkit';
+
+const mail = MailtrapClient.fromEnv();
+if (!mail) throw new Error('set MAILTRAP_API_TOKEN + MAILTRAP_INBOX_ID');
+
+const after = new Date();
+// … trigger forgot-password in the app …
+const msg = await mail.waitForEmail({ to: 'e2e@example.com', subject: /reset/i, after });
+const html = await mail.getHtml(msg.id, msg.html_path);
+const link = firstLinkMatching(html, /reset-password/);
+assertPublicHost(link!);
+```
+
+**Important:** Mailtrap only sees mail if the app’s SMTP points at the sandbox
+(`sandbox.smtp.mailtrap.io` + inbox credentials). Sending via Gmail to a real
+address will not appear in the sandbox. See ansible `docs/hardening/SECRETS.md`.
 
 ## Develop this repo
 

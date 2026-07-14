@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-07-14
+
+- **Mailtrap** Email Testing client: `MailtrapClient`, `waitForEmail`, `extractLinks` / `firstLinkMatching`
+- Export path `@levkin/playkit/mail`
+
 ## 0.1.1 — 2026-07-14
 
 - Add `prepare` script so git installs build `dist/` for consumers

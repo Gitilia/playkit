@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
     'browser/index': 'src/browser/index.ts',
     'api/index': 'src/api/index.ts',
+    'mail/index': 'src/mail/index.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,

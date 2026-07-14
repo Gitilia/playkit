@@ -2,7 +2,7 @@
 
 Living plan for making `@levkin/playkit` more useful across Levkin repos.
 
-## Now (v0.1) — shipped in this repo
+## Now (v0.2) — Mailtrap + prior kit
 
 - [x] Browser helpers with retries (`click`, `fill`, `safeGoto`, visibility waits)
 - [x] `BasePage` for Page Objects
@@ -14,10 +14,11 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [x] Unit tests (vitest) + Gitea Actions CI
 - [x] Starter Grafana dashboard JSON
 - [x] Consumer docs + API/UI examples
+- [x] **Mailtrap / Email Testing adapter** — `waitForEmail`, link extraction (Kolby #56 class)
 
-## Next (v0.2) — high value
+## Next (v0.3) — high value
 
-- [ ] **Mailosaur / Mailpit adapter** — assert “email sent” without depending on JRCC Outlook or Spamhaus-blocked IPs
+- [ ] **Mailpit adapter** — same `waitForEmail` interface for local/homelab catch-all (no SaaS)
 - [ ] **Auth storage state helpers** — save/load Playwright `storageState` for admin vs viewer roles
 - [ ] **Trace-on-failure preset** — one-liner Playwright config merge (`trace: 'retain-on-failure'`, screenshot, video)
 - [ ] **Schema assertions** — optional Zod (or AJV) helpers on `ApiClient` responses
@@ -26,7 +27,7 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] **Deploy-smoke CLI** — `playkit smoke --project punimtag` post-deploy gate (health + public host + login)
 - [ ] **Retry policy presets** — flaky-network vs strict-CI profiles
 
-## Later (v0.3+) — professional polish
+## Later (v0.4+) — professional polish
 
 - [ ] **Web Vitals** (LCP/CLS/INP) collection via Playwright CDP + metrics labels
 - [ ] **A11y** — axe-core wrapper as optional peer
@@ -58,11 +59,11 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 | Kuma + playkit correlation IDs | Tie synthetic monitor blips to e2e runs |
 | Diffable timing baselines in git | Spot regressions without Grafana |
 
-## Punimtag as first consumer (follow-up, not this repo)
+## Punimtag as first consumer
 
-1. Add `e2e/` depending on `@levkin/playkit@v0.1.0`
-2. Specs: public host after sign-out; health API; optional forgot-password with mail trap
-3. CI job on PR + scheduled DEV smoke
+1. [x] `e2e/` depending on `@levkin/playkit`
+2. [x] Specs: public host after sign-out; health API; forgot-password via Mailtrap
+3. [ ] CI secrets populated + scheduled DEV smoke
 4. Deploy rule: PR → green CI → merge → deploy script (no silent `pct exec` “done”)
 
 ## Observability

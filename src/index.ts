@@ -43,3 +43,13 @@ export {
   createPlaykitFixtures,
   type PlaykitFixtures,
 } from './fixtures/index.js';
+
+export {
+  MailtrapClient,
+  loadMailtrapConfig,
+  extractLinks,
+  firstLinkMatching,
+  type MailtrapConfig,
+  type MailtrapMessage,
+  type WaitForEmailOptions,
+} from './mail/index.js';
