@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 — 2026-07-14
+
+- Add `prepare` script so git installs build `dist/` for consumers
+
 ## 0.1.0 — 2026-07-14
 
 Initial release.

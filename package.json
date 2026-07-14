@@ -1,6 +1,6 @@
 {
   "name": "@levkin/playkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared Playwright + API test kit — browser helpers, API client, logging, performance, Grafana/Prometheus metrics",
   "license": "MIT",
   "type": "module",
@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "prepare": "npm run build",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
