@@ -37,6 +37,8 @@ public e2e must keep the default forbid-private behavior.
 
 ## CI
 
-`.gitea/workflows/ci.yml` job `selftest` installs Chromium deps and runs
-`npm run selftest` after unit tests. Failures there mean a regression in kit
-browser/API helpers *before* a consumer pins a broken tag.
+`.gitea/workflows/ci.yml` job `selftest` runs in
+`mcr.microsoft.com/playwright:v1.61.1-jammy` (must match the pinned
+`@playwright/test` version) and executes `npm run selftest` after unit tests.
+Failures there mean a regression in kit browser/API helpers *before* a consumer
+pins a broken tag.

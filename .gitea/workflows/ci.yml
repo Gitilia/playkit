@@ -52,7 +52,7 @@ jobs:
     if: needs.skip-ci-check.outputs.should-skip != '1'
     runs-on: [homelab, self-hosted, linux]
     container:
-      image: mcr.microsoft.com/playwright:v1.52.0-jammy
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
     steps:
       - uses: actions/checkout@v4
       - name: Install
