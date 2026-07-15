@@ -3,7 +3,7 @@
 ## 1. Depend on a release
 
 ```bash
-npm install git+https://git.levkin.ca/ilia/playkit.git#v0.1.0
+npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.0
 npm install -D @playwright/test
 npx playwright install chromium
 ```
@@ -25,7 +25,8 @@ Store in Infisical `LevkinOps` / `Development` (path e.g. `/playkit/punimtag`):
 
 - `PLAYKIT_BASE_URL=https://punimtagdev.levkin.ca`
 - `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` (dedicated test user — not a human’s password)
-- optional `PLAYKIT_PUSHGATEWAY_URL`
+- optional `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.24:9091` (Pushgateway on the observability LXC — config lives in ansible `deploy/observability/`; scrape job + `live-playkit` Grafana board are wired, but confirm `make deploy-observability` has actually been run before turning `PLAYKIT_METRICS_ENABLED=true` on in CI)
+- for mail specs: `PLAYKIT_MAIL_PROVIDER=mailpit` (default) + `MAILPIT_BASE_URL` / `MAILPIT_USER` / `MAILPIT_PASSWORD`, or `MAILTRAP_*` for SaaS
 
 Sync into Gitea Actions secrets for the consumer repo.
 

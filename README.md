@@ -8,7 +8,7 @@ Use it as a library from any consumer repo (punimtag, MirrorMatch, …). App-spe
 
 ```bash
 # git tag dependency (until a private npm registry is wired)
-npm install git+https://git.levkin.ca/ilia/playkit.git#v0.1.0
+npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.0
 
 # peer
 npm install -D @playwright/test
@@ -72,27 +72,37 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `createLogger` / `redactSecrets` | Structured JSON logs |
 | `TimingCollector` / `pushPrometheusMetrics` | Action timings → Prometheus Pushgateway → Grafana |
 | `createPlaykitRuntime` | One-shot config + logger + API + timings |
-| `MailtrapClient` / `waitForEmail` | Assert password-reset / verify emails in Mailtrap sandbox |
+| `createMailInbox` / `MailpitClient` / `MailtrapClient` | Assert password-reset / verify emails (Mailpit homelab trap or Mailtrap SaaS) |
+| `assertSchema` | Zod schema asserts (standalone or via `ApiClient` `schema` option) |
+| `saveStorageState` / `storageStateUse` | Auth once, reuse across specs |
+| `playkitFailureArtifacts` | Trace/video/screenshot only on failure |
 
-## Mailtrap (email testing)
+## Email testing (Mailpit default, Mailtrap optional)
+
+`createMailInbox()` picks the provider from `PLAYKIT_MAIL_PROVIDER` (default
+`mailpit`) so specs don't need to know which backend is behind it. Prefer
+**Mailpit** — it's our homelab SMTP trap (`10.0.10.45`, no external
+dependency); use Mailtrap only if you specifically want the SaaS sandbox.
 
 ```ts
-import { MailtrapClient, firstLinkMatching, assertPublicHost } from '@levkin/playkit';
+import { createMailInbox, readMailHtml, firstLinkMatching, assertPublicHost } from '@levkin/playkit';
 
-const mail = MailtrapClient.fromEnv();
-if (!mail) throw new Error('set MAILTRAP_API_TOKEN + MAILTRAP_INBOX_ID');
+const mail = createMailInbox(); // reads PLAYKIT_MAIL_PROVIDER / MAILPIT_* / MAILTRAP_*
+if (!mail) throw new Error('set MAILPIT_BASE_URL (or MAILTRAP_API_TOKEN + MAILTRAP_INBOX_ID)');
 
 const after = new Date();
 // … trigger forgot-password in the app …
 const msg = await mail.waitForEmail({ to: 'e2e@example.com', subject: /reset/i, after });
-const html = await mail.getHtml(msg.id, msg.html_path);
+const html = await readMailHtml(mail, msg); // normalizes Mailpit vs Mailtrap message shape
 const link = firstLinkMatching(html, /reset-password/);
 assertPublicHost(link!);
 ```
 
-**Important:** Mailtrap only sees mail if the app’s SMTP points at the sandbox
-(`sandbox.smtp.mailtrap.io` + inbox credentials). Sending via Gmail to a real
-address will not appear in the sandbox. See ansible `docs/hardening/SECRETS.md`.
+**Important:** the mail client only sees mail if the app's SMTP actually
+points at that trap (Mailpit `10.0.10.45:1025` in DEV, or Mailtrap's
+`sandbox.smtp.mailtrap.io` + inbox credentials for SaaS). Sending via Gmail to
+a real address will not appear in either. See ansible `docs/hardening/SECRETS.md`
+(`## Playkit / punimtag e2e secrets`).
 
 ## Develop this repo
 
@@ -106,8 +116,12 @@ npm run build
 ## Release
 
 1. Bump `version` in `package.json`
-2. Update `CHANGELOG.md`
-3. Tag `vX.Y.Z` and push — consumers pin the tag
+2. Update `CHANGELOG.md` with a `## X.Y.Z` section (the release job extracts this verbatim as release notes)
+3. Tag `vX.Y.Z` and push
+
+Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then creates a Gitea release (with the `npm pack` tarball attached) via the API using a repo-scoped `GITEA_TOKEN` Actions secret. If any check fails, no release is created — fix and re-tag. Consumers still pin the git tag (`#vX.Y.Z`); the Gitea release is for visibility/changelog, not an npm registry publish (see ROADMAP "private Gitea npm registry").
+
+**One-time setup:** add a `GITEA_TOKEN` secret (repo `Settings → Actions → Secrets` on `ilia/playkit`) scoped to create releases on this repo — separate from the `PLAYKIT_GIT_TOKEN` consumers use to clone it.
 
 ## License
 
