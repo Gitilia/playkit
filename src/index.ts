@@ -22,9 +22,19 @@ export {
   saveStorageState,
   storageStateUse,
   playkitFailureArtifacts,
+  interceptNetworkCall,
+  startNetworkErrorMonitor,
+  NetworkErrorMonitor,
+  matchesExcludePattern,
+  dedupeNetworkErrors,
   type ClickOptions,
   type FillOptions,
   type GotoOptions,
+  type FulfillResponse,
+  type InterceptNetworkCallOptions,
+  type InterceptedNetworkCall,
+  type NetworkError,
+  type NetworkErrorMonitorOptions,
 } from './browser/index.js';
 
 export {

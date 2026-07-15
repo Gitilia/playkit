@@ -55,3 +55,6 @@ e2e:
 
 PR → CI green (unit + e2e when secrets present) → merge → documented deploy script.  
 Do not claim “fixed” from a bare `pct exec` hotfix without a follow-up PR.
+
+**Adoption pause:** do not add playkit to other app repos until punimtag + kit CI
+have soaked for a few days. See `docs/IDEAS.md`.

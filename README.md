@@ -76,6 +76,26 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `assertSchema` | Zod schema asserts (standalone or via `ApiClient` `schema` option) |
 | `saveStorageState` / `storageStateUse` | Auth once, reuse across specs |
 | `playkitFailureArtifacts` | Trace/video/screenshot only on failure |
+| `interceptNetworkCall` | Spy or mock the next matching page network call |
+| `startNetworkErrorMonitor` | Fail tests that silently collect HTTP 4xx/5xx |
+
+See also `docs/NETWORK.md`, `docs/IDEAS.md` (OSS-borrowed backlog), `docs/OUTLINE.md` (live docs sync).
+
+## Network (page traffic)
+
+```ts
+import { interceptNetworkCall, startNetworkErrorMonitor } from '@levkin/playkit';
+
+const users = interceptNetworkCall({ page, url: '**/api/users' });
+const net = startNetworkErrorMonitor(page, { excludePatterns: ['sentry.io'] });
+try {
+  await page.goto('/users');
+  const { status } = await users;
+  expect(status).toBe(200);
+} finally {
+  net.assertNoErrors();
+}
+```
 
 ## Email testing (Mailpit default, Mailtrap optional)
 
@@ -120,6 +140,8 @@ npm run build
 3. Tag `vX.Y.Z` and push
 
 Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then creates a Gitea release (with the `npm pack` tarball attached) via the API using a repo-scoped `GITEA_TOKEN` Actions secret. If any check fails, no release is created — fix and re-tag. Consumers still pin the git tag (`#vX.Y.Z`); the Gitea release is for visibility/changelog, not an npm registry publish (see ROADMAP "private Gitea npm registry").
+
+4. **Update Outline** — after the release is green, sync the Playkit page under Outline **QA & Dev** (`notes.levkin.ca`). Checklist: `docs/OUTLINE.md`.
 
 **One-time setup:** add a `GITEA_TOKEN` secret (repo `Settings → Actions → Secrets` on `ilia/playkit`) scoped to create releases on this repo — separate from the `PLAYKIT_GIT_TOKEN` consumers use to clone it.
 

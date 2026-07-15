@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Network interception / error monitor** — `interceptNetworkCall()`, `startNetworkErrorMonitor()` (see `docs/NETWORK.md`)
+- Docs: `docs/OUTLINE.md` checklist (update Outline QA & Dev Playkit page on each release); `docs/IDEAS.md` for OSS-borrowed backlog; adoption pause (no new consumer repos until soak)
 - CI: add tag-triggered `release` job (`.gitea/workflows/ci.yml`) — re-runs build/test, verifies tag matches `package.json` version and `CHANGELOG.md` documents it, creates a Gitea release with an `npm pack` tarball attached. Requires a one-time `GITEA_TOKEN` Actions secret.
 - Docs: bump install pin examples from `v0.1.0` to `v0.3.0` (README, CONSUMER.md)
 - Docs: lead with Mailpit (homelab default) instead of Mailtrap in README email section; use `createMailInbox()` + `readMailHtml()` in the example instead of a provider-specific client
