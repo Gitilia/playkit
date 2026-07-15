@@ -25,11 +25,11 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] **Consumer template** — `npx @levkin/playkit init` scaffolding `e2e/` + CI snippet
 - [ ] **Deploy-smoke CLI** — `playkit smoke --project punimtag` post-deploy gate
 - [ ] **Retry policy presets** — flaky-network vs strict-CI profiles
-- [ ] **Self-test against a real fake site** — today's unit tests only mock HTTP/mail; `examples/` specs are explicitly *not run* in kit CI. Stand up a tiny demo app (or point at an existing DEV LXC) and run the browser/API/mail helpers against it in CI, so a regression in `BasePage`/`ApiClient`/`assertPublicHost` is caught before a consumer pins a broken tag.
+- [x] **Self-test against a real fake site** — `selftest/` tiny Node app + Playwright suite in CI (`docs/SELFTEST.md`)
 - [x] **Network interception / network error monitor** — `interceptNetworkCall()`, `startNetworkErrorMonitor()` / `assertNoErrors()` (see `docs/NETWORK.md`)
-- [x] **Tag-triggered release workflow** — `.gitea/workflows/ci.yml` `release` job now runs on `vX.Y.Z` tag push: re-verifies build/test, checks tag == `package.json` version, checks `CHANGELOG.md` has that version's section, then creates a Gitea release (npm-pack tarball attached) via the API. Needs a one-time `GITEA_TOKEN` Actions secret on this repo (see README "Release"). Still open: `build-and-test`/`secret-scan` also re-run on the tag push (same `on.push` trigger) — harmless redundancy, not wired to skip.
-- [ ] **Live docs** — Outline page under **QA & Dev** (`notes.levkin.ca`). Sync checklist in `docs/OUTLINE.md` — update Outline whenever playkit is released.
-- [x] **Pushgateway + dashboard wired in ansible** — `pushgateway` service, Prometheus scrape job, and a generated `live-playkit` Grafana board now live in ansible `deploy/observability/` (superseding the old standalone `dashboards/playkit-overview.json`, which is removed). Ops still needs to run `make deploy-observability` against the LXC before `PLAYKIT_METRICS_ENABLED=true` does anything in CI — check with the ansible repo owner before flipping that on.
+- [x] **Tag-triggered release workflow** — `.gitea/workflows/ci.yml` `release` job now runs on `vX.Y.Z` tag push: re-verifies build/test, checks tag == `package.json` version, checks `CHANGELOG.md` has that version's section, then creates a Gitea release (npm-pack tarball attached) via the API. Needs a one-time `RELEASE_TOKEN` Actions secret on this repo (see README "Release"). Still open: `build-and-test`/`secret-scan` also re-run on the tag push (same `on.push` trigger) — harmless redundancy, not wired to skip.
+- [x] **Live docs** — Outline page under **QA & Dev** (`notes.levkin.ca`). Sync with `python3 scripts/outline-sync-playkit.py` (checklist in `docs/OUTLINE.md`).
+- [x] **Pushgateway + dashboard wired in ansible** — applied via `make deploy-observability` (LXC `10.0.10.24`): `pushgateway` container, Prometheus scrape job, Grafana `live-playkit` board. Flip consumer CI metrics with `PLAYKIT_METRICS_ENABLED=true` + `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.24:9091`.
 
 ## Adoption pause
 

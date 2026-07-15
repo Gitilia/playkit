@@ -45,6 +45,25 @@ jobs:
       - name: Build
         run: npm run build
 
+  # Real browser+HTTP self-test (not mocks). Catches BasePage/ApiClient/network
+  # regressions before consumers pin a broken tag. See docs/SELFTEST.md.
+  selftest:
+    needs: [skip-ci-check, build-and-test]
+    if: needs.skip-ci-check.outputs.should-skip != '1'
+    runs-on: [homelab, self-hosted, linux]
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-jammy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: npm ci
+      - name: Self-test against fake site
+        run: npm run selftest
+        env:
+          CI: 'true'
+          PLAYKIT_SELFTEST_PORT: '4173'
+          PLAYKIT_BASE_URL: 'http://127.0.0.1:4173'
+
   secret-scan:
     needs: skip-ci-check
     if: needs.skip-ci-check.outputs.should-skip != '1'
