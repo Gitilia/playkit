@@ -121,7 +121,7 @@ jobs:
             }));
           ')
           RESPONSE=$(curl -sS -X POST \
-            -H "Authorization: token ${{ secrets.GITEA_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "$BODY_JSON" \
             "https://git.levkin.ca/api/v1/repos/ilia/playkit/releases")
@@ -132,6 +132,6 @@ jobs:
           fi
           TARBALL=$(ls /tmp/levkin-playkit-*.tgz)
           curl -sS -X POST \
-            -H "Authorization: token ${{ secrets.GITEA_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" \
             -F "attachment=@${TARBALL}" \
             "https://git.levkin.ca/api/v1/repos/ilia/playkit/releases/${RELEASE_ID}/assets"

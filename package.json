@@ -1,6 +1,6 @@
 {
   "name": "@levkin/playkit",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Shared Playwright + API test kit — browser helpers, API client, logging, performance, Grafana/Prometheus metrics",
   "license": "MIT",
   "type": "module",

@@ -3,7 +3,7 @@
 ## 1. Depend on a release
 
 ```bash
-npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.0
+npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.1
 npm install -D @playwright/test
 npx playwright install chromium
 ```

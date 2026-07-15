@@ -2,7 +2,7 @@
 
 Living plan for making `@levkin/playkit` more useful across Levkin repos.
 
-## Now (v0.3) — shipped
+## Now (v0.3.1) — shipped
 
 - [x] Browser helpers with retries (`click`, `fill`, `safeGoto`, visibility waits)
 - [x] `BasePage` for Page Objects
