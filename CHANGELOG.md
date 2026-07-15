@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Tests: expand coverage for network helpers — `NetworkErrorMonitor` (record/dedupe/exclude/minStatus/assert), `interceptNetworkCall` (spy/fulfill/handler/method continue/non-JSON), plus `globToRegExp` / `responseMatchesFilter`
 - **Network interception / error monitor** — `interceptNetworkCall()`, `startNetworkErrorMonitor()` (see `docs/NETWORK.md`)
 - Docs: `docs/OUTLINE.md` checklist (update Outline QA & Dev Playkit page on each release); `docs/IDEAS.md` for OSS-borrowed backlog; adoption pause (no new consumer repos until soak)
 - CI: add tag-triggered `release` job (`.gitea/workflows/ci.yml`) — re-runs build/test, verifies tag matches `package.json` version and `CHANGELOG.md` documents it, creates a Gitea release with an `npm pack` tarball attached. Requires a one-time `GITEA_TOKEN` Actions secret.
