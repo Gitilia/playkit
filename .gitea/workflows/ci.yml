@@ -154,3 +154,16 @@ jobs:
             -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" \
             -F "attachment=@${TARBALL}" \
             "https://git.levkin.ca/api/v1/repos/ilia/playkit/releases/${RELEASE_ID}/assets"
+      - name: Publish to Gitea npm registry
+        # RELEASE_TOKEN (or optional NPM_PUBLISH_TOKEN) needs write:package — docs/NPM_REGISTRY.md
+        run: |
+          TOKEN="${{ secrets.NPM_PUBLISH_TOKEN }}"
+          if [ -z "$TOKEN" ]; then TOKEN="${{ secrets.RELEASE_TOKEN }}"; fi
+          if [ -z "$TOKEN" ]; then
+            echo "::error::set RELEASE_TOKEN or NPM_PUBLISH_TOKEN with write:package"
+            exit 1
+          fi
+          echo "@levkin:registry=https://git.levkin.ca/api/packages/ilia/npm/" > /tmp/playkit.npmrc
+          echo "//git.levkin.ca/api/packages/ilia/npm/:_authToken=${TOKEN}" >> /tmp/playkit.npmrc
+          npm publish --userconfig /tmp/playkit.npmrc --access restricted
+          rm -f /tmp/playkit.npmrc

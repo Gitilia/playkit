@@ -33,6 +33,24 @@ describe('loadConfig', () => {
     });
     expect(cfg.expectedHost).toBe('punimtagdev.levkin.ca');
     expect(cfg.project).toBe('punimtag');
+    expect(cfg.retryPreset).toBe('default');
+  });
+
+  it('applies PLAYKIT_RETRY_PRESET and allows env overrides', () => {
+    const cfg = loadConfig({
+      PLAYKIT_BASE_URL: 'https://punimtagdev.levkin.ca',
+      PLAYKIT_RETRY_PRESET: 'strictCi',
+    });
+    expect(cfg.retryPreset).toBe('strictCi');
+    expect(cfg.actionRetries).toBe(0);
+    expect(cfg.defaultTimeoutMs).toBe(15_000);
+
+    const overriden = loadConfig({
+      PLAYKIT_BASE_URL: 'https://punimtagdev.levkin.ca',
+      PLAYKIT_RETRY_PRESET: 'strictCi',
+      PLAYKIT_ACTION_RETRIES: '9',
+    });
+    expect(overriden.actionRetries).toBe(9);
   });
 });
 
