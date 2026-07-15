@@ -21,9 +21,23 @@ export {
   dedupeNetworkErrors,
   globToRegExp,
   responseMatchesFilter,
+  COMMON_NOISE_PATTERNS,
   type FulfillResponse,
   type InterceptNetworkCallOptions,
   type InterceptedNetworkCall,
   type NetworkError,
   type NetworkErrorMonitorOptions,
 } from './network.js';
+export {
+  byAriaLabel,
+  clickByAriaLabel,
+  type ByAriaLabelOptions,
+} from './aria.js';
+export { withDialog, type WithDialogHandlers, type WithDialogOptions } from './dialog.js';
+export { fillContentEditable, type FillContentEditableOptions } from './richText.js';
+export {
+  runPersistentSession,
+  isBrowserCrashError,
+  type PersistentSessionOptions,
+  type LaunchedSession,
+} from './persistentSession.js';

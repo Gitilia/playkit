@@ -35,6 +35,13 @@ export {
   dedupeNetworkErrors,
   globToRegExp,
   responseMatchesFilter,
+  COMMON_NOISE_PATTERNS,
+  byAriaLabel,
+  clickByAriaLabel,
+  withDialog,
+  fillContentEditable,
+  runPersistentSession,
+  isBrowserCrashError,
   type ClickOptions,
   type FillOptions,
   type GotoOptions,
@@ -43,6 +50,12 @@ export {
   type InterceptedNetworkCall,
   type NetworkError,
   type NetworkErrorMonitorOptions,
+  type ByAriaLabelOptions,
+  type WithDialogHandlers,
+  type WithDialogOptions,
+  type FillContentEditableOptions,
+  type PersistentSessionOptions,
+  type LaunchedSession,
 } from './browser/index.js';
 
 export {

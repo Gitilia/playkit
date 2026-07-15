@@ -85,6 +85,10 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `saveStorageState` / `storageStateUse` | Auth once, reuse across specs |
 | `playkitFailureArtifacts` | Trace/video/screenshot only on failure |
 | `interceptNetworkCall` | Spy or mock the next matching page network call |
+| `byAriaLabel` / `clickByAriaLabel` | Find/click by a regex over `aria-label`, scoped to a page or a narrower locator |
+| `withDialog` | Retry an action against a modal that might have silently closed, reopening it first |
+| `fillContentEditable` | Type into `contenteditable` rich-text fields with real paragraph breaks |
+| `runPersistentSession` | Keep one browser session open across runs via flag files instead of relaunching/re-authenticating |
 | `playkit` CLI | `init` scaffold + `smoke` post-deploy gate |
 
 See also `docs/NETWORK.md`, `docs/SELFTEST.md`, `docs/NPM_REGISTRY.md`, `docs/OPS.md`, `docs/IDEAS.md`, `docs/OUTLINE.md`.
@@ -103,6 +107,59 @@ try {
 } finally {
   net.assertNoErrors();
 }
+```
+
+## Resilient UI automation (third-party / adversarial SPAs)
+
+`click`/`fill`/`waitForVisible` above assume you already have a correct
+`Locator` — great when you control the markup and have stable test ids. These
+helpers are for the opposite case: driving a third-party site you don't
+control, where selectors are dynamic/compound (aria-labels that embed
+record-specific text), rich-text fields aren't real `<textarea>`s, modals
+close out from under you, and the site has its own bot-detection you'd rather
+not retrigger by relaunching the browser on every run.
+
+```ts
+import {
+  byAriaLabel,
+  clickByAriaLabel,
+  withDialog,
+  fillContentEditable,
+  runPersistentSession,
+} from '@levkin/playkit';
+
+// aria-label is often compound + record-specific ("Edit Staff Automation
+// Engineer at NiyaSoft") — a regex survives per-record text variation better
+// than an exact string copied from one DOM dump.
+await clickByAriaLabel(page, /Edit.*at NiyaSoft/i);
+
+// Re-open the dialog and retry if it closed underneath you mid-flow.
+await withDialog(
+  {
+    isOpen: () => page.getByRole('button', { name: 'Save' }).isVisible(),
+    reopen: () => clickByAriaLabel(page, /Edit.*at NiyaSoft/i),
+  },
+  async () => {
+    await fillContentEditable(page.locator('[contenteditable="true"]').first(), longBioText);
+    await page.getByRole('button', { name: 'Save' }).click();
+  },
+);
+
+// Keep ONE browser open across many runs — touch RUN/READY/CLOSE flag files
+// instead of relaunching (and re-triggering captchas) each time.
+await runPersistentSession({
+  dir: '.session',
+  storageStatePath: '.session/state.json',
+  launch: async () => {
+    const browser = await chromium.launch({ headless: false });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    return { browser, context, page };
+  },
+  onRun: async ({ page }) => {
+    /* your flow against the live page */
+  },
+});
 ```
 
 ## Email testing (Mailpit default, Mailtrap optional)
