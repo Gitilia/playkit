@@ -40,3 +40,11 @@ wire it in CI (preferred if you want least privilege).
 ```bash
 npm view @levkin/playkit versions --registry https://git.levkin.ca/api/packages/ilia/npm/
 ```
+
+## Outstanding ops
+
+First `v0.4.0` Gitea Release succeeded; `npm publish` returned **E401** because `RELEASE_TOKEN` lacks `write:package`. Create/refresh a token with package write (or add `NPM_PUBLISH_TOKEN`) and either re-run the release job or publish once by hand:
+
+```bash
+npm publish --registry https://git.levkin.ca/api/packages/ilia/npm/
+```
