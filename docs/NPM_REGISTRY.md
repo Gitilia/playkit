@@ -27,13 +27,16 @@ npm i git+https://git.levkin.ca/ilia/playkit.git#v0.4.0
 
 On `vX.Y.Z` tag, `.gitea/workflows/ci.yml` `release` job:
 
-1. Creates the Gitea Release + attaches `npm pack` tarball (existing)
+1. Creates the Gitea Release + attaches `npm pack` tarball
 2. Runs `npm publish` to `https://git.levkin.ca/api/packages/ilia/npm/`
-   using `RELEASE_TOKEN` (needs **`write:package`** in addition to release scopes)
+   using `NPM_PUBLISH_TOKEN` if set, else `RELEASE_TOKEN`
+   (needs **`write:package`**)
 
-One-time: edit the `RELEASE_TOKEN` personal access token / app token on Gitea
-to include package write, or add a dedicated `NPM_PUBLISH_TOKEN` secret and
-wire it in CI (preferred if you want least privilege).
+Manual one-shot:
+
+```bash
+NPM_PUBLISH_TOKEN=… ./scripts/publish-gitea-npm.sh
+```
 
 ## Verify
 
@@ -41,10 +44,7 @@ wire it in CI (preferred if you want least privilege).
 npm view @levkin/playkit versions --registry https://git.levkin.ca/api/packages/ilia/npm/
 ```
 
-## Outstanding ops
+## Token setup
 
-First `v0.4.0` Gitea Release succeeded; `npm publish` returned **E401** because `RELEASE_TOKEN` lacks `write:package`. Create/refresh a token with package write (or add `NPM_PUBLISH_TOKEN`) and either re-run the release job or publish once by hand:
-
-```bash
-npm publish --registry https://git.levkin.ca/api/packages/ilia/npm/
-```
+See **`docs/OPS.md`** (Outstanding → Gitea npm publish token). First `v0.4.0`
+publish hit E401 until a package-scoped token is stored as `NPM_PUBLISH_TOKEN`.
