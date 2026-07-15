@@ -14,7 +14,8 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 
 - [ ] End adoption pause — migrate first extra consumer (`screening` candidate)
 - [ ] Evaluate `playwright-exporter` for scheduled synthetics (may supersede bespoke cron wrappers around `playkit smoke`)
-- [ ] **Wire `NPM_PUBLISH_TOKEN` / `write:package`** — `v0.4.0` git release OK; first npm publish hit E401 (token scope). Soft-fail in CI until fixed.
+- [ ] **Wire `NPM_PUBLISH_TOKEN` / `write:package`** — `v0.4.0` git release OK; first npm publish hit E401. Soft-fail in CI until fixed. Checklist: `docs/OPS.md`
+- [ ] **Outline API key scopes** — vault key needs `documents.update` (+ delete/archive). Living page synced to v0.4.0 via UI; script thereafter. Checklist: `docs/OPS.md`
 
 ## Adoption pause
 

@@ -87,7 +87,7 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `interceptNetworkCall` | Spy or mock the next matching page network call |
 | `playkit` CLI | `init` scaffold + `smoke` post-deploy gate |
 
-See also `docs/NETWORK.md`, `docs/SELFTEST.md`, `docs/NPM_REGISTRY.md`, `docs/IDEAS.md`, `docs/OUTLINE.md`.
+See also `docs/NETWORK.md`, `docs/SELFTEST.md`, `docs/NPM_REGISTRY.md`, `docs/OPS.md`, `docs/IDEAS.md`, `docs/OUTLINE.md`.
 
 ## Network (page traffic)
 

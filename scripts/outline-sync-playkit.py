@@ -32,14 +32,15 @@ def load_package_version() -> str:
 
 
 def playkit_markdown(version: str) -> str:
-    return f"""# @levkin/playkit
-
-Shared Playwright + API e2e kit for Levkin repos. **Source of truth is the git repo** — this page is the browsable front door.
+    # Do not start with a second H1 — Outline already uses document title "Playkit".
+    return f"""Shared Playwright + API e2e kit for Levkin repos. **Source of truth is the git repo** — this page is the browsable front door.
 
 - **Repo:** https://git.levkin.ca/ilia/playkit
 - **Current:** v{version}
 - **Consumers:** punimtag (`e2e/`) — *pause further adoption until soak completes*
-- **Install (git pin):** `npm i git+https://git.levkin.ca/ilia/playkit.git#v{version}`
+- **Install (npm):** `npm i @levkin/playkit@{version}` — see docs/NPM_REGISTRY.md
+- **Fallback (git pin):** `npm i git+https://git.levkin.ca/ilia/playkit.git#v{version}`
+- **CLI:** `npx @levkin/playkit init` · `playkit smoke`
 
 ## What's in the box
 
@@ -49,6 +50,8 @@ Shared Playwright + API e2e kit for Levkin repos. **Source of truth is the git r
 - Mail: `createMailInbox()` (Mailpit default, Mailtrap optional)
 - Auth helpers: `saveStorageState` / `storageStateUse`, `playkitFailureArtifacts()`
 - Metrics: `TimingCollector` → Prometheus Pushgateway → Grafana **Live — Playkit e2e**
+- Retry presets: `PLAYKIT_RETRY_PRESET=strictCi|flakyNetwork|default`
+- Kit selftest CI against a fake site — docs/SELFTEST.md
 
 ## Quick links (in-repo)
 
@@ -57,10 +60,12 @@ Shared Playwright + API e2e kit for Levkin repos. **Source of truth is the git r
 | `README.md` | Install, env vars, release steps |
 | `docs/CONSUMER.md` | How to wire a consumer `e2e/` |
 | `docs/NETWORK.md` | Page traffic spy / error monitor |
+| `docs/NPM_REGISTRY.md` | Gitea npm install / publish |
+| `docs/OPS.md` | Ops soak + outstanding UI one-timers |
 | `docs/IDEAS.md` | OSS-borrowed backlog |
 | `docs/OUTLINE.md` | When / how to re-sync this page |
 | `docs/SELFTEST.md` | Kit CI fake-site self-test |
-| `ROADMAP.md` | v0.4+ plan |
+| `ROADMAP.md` | Living plan |
 | `CHANGELOG.md` | Per-version notes |
 
 ## Metrics
@@ -71,9 +76,10 @@ Shared Playwright + API e2e kit for Levkin repos. **Source of truth is the git r
 
 ## Release checklist (operators)
 
-1. Tag `vX.Y.Z` (must match `package.json` + CHANGELOG section) → Gitea `release` job uses `RELEASE_TOKEN`
-2. Re-run this script: `python3 scripts/outline-sync-playkit.py`
-3. Confirm Grafana board + Pushgateway scrape after `make deploy-observability` (ansible)
+1. Tag `vX.Y.Z` (must match `package.json` + CHANGELOG section) → Gitea `release` job
+2. Ensure `NPM_PUBLISH_TOKEN` has `write:package` (docs/OPS.md) so registry publish succeeds
+3. Re-run this script: `python3 scripts/outline-sync-playkit.py`
+4. Confirm Grafana board + Pushgateway scrape (`make deploy-observability` in ansible)
 
 _Last synced by `scripts/outline-sync-playkit.py` for v{version}._
 """
