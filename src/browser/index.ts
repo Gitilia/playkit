@@ -13,3 +13,15 @@ export {
 } from './actions.js';
 export { saveStorageState, storageStateUse } from './storageState.js';
 export { playkitFailureArtifacts } from './playwrightPreset.js';
+export {
+  interceptNetworkCall,
+  startNetworkErrorMonitor,
+  NetworkErrorMonitor,
+  matchesExcludePattern,
+  dedupeNetworkErrors,
+  type FulfillResponse,
+  type InterceptNetworkCallOptions,
+  type InterceptedNetworkCall,
+  type NetworkError,
+  type NetworkErrorMonitorOptions,
+} from './network.js';

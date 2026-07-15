@@ -25,6 +25,15 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] **Consumer template** — `npx @levkin/playkit init` scaffolding `e2e/` + CI snippet
 - [ ] **Deploy-smoke CLI** — `playkit smoke --project punimtag` post-deploy gate
 - [ ] **Retry policy presets** — flaky-network vs strict-CI profiles
+- [ ] **Self-test against a real fake site** — today's unit tests only mock HTTP/mail; `examples/` specs are explicitly *not run* in kit CI. Stand up a tiny demo app (or point at an existing DEV LXC) and run the browser/API/mail helpers against it in CI, so a regression in `BasePage`/`ApiClient`/`assertPublicHost` is caught before a consumer pins a broken tag.
+- [x] **Network interception / network error monitor** — `interceptNetworkCall()`, `startNetworkErrorMonitor()` / `assertNoErrors()` (see `docs/NETWORK.md`)
+- [x] **Tag-triggered release workflow** — `.gitea/workflows/ci.yml` `release` job now runs on `vX.Y.Z` tag push: re-verifies build/test, checks tag == `package.json` version, checks `CHANGELOG.md` has that version's section, then creates a Gitea release (npm-pack tarball attached) via the API. Needs a one-time `GITEA_TOKEN` Actions secret on this repo (see README "Release"). Still open: `build-and-test`/`secret-scan` also re-run on the tag push (same `on.push` trigger) — harmless redundancy, not wired to skip.
+- [ ] **Live docs** — Outline page under **QA & Dev** (`notes.levkin.ca`). Sync checklist in `docs/OUTLINE.md` — update Outline whenever playkit is released.
+- [x] **Pushgateway + dashboard wired in ansible** — `pushgateway` service, Prometheus scrape job, and a generated `live-playkit` Grafana board now live in ansible `deploy/observability/` (superseding the old standalone `dashboards/playkit-overview.json`, which is removed). Ops still needs to run `make deploy-observability` against the LXC before `PLAYKIT_METRICS_ENABLED=true` does anything in CI — check with the ansible repo owner before flipping that on.
+
+## Adoption pause
+
+**No new consumer repos until we soak.** Keep playing through punimtag e2e + kit CI for a few days (release job, Pushgateway/dashboard apply, network helpers) before migrating `screening` / `slack-sieve` / `portfolio`. See `docs/IDEAS.md`.
 
 ## Later (v0.5+) — professional polish
 
@@ -33,8 +42,19 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] **Visual regression** — screenshot baselines with per-project bucket (MinIO)
 - [ ] **Contract testing** — OpenAPI-driven API suite generator
 - [ ] **Multi-browser matrix helper** — chromium/firefox/webkit project factory
-- [ ] **Flake quarantine** — annotate + quarantine flaky tests with Grafana panel
+- [ ] **Flake quarantine** — annotate + quarantine flaky tests with Grafana panel (depends on burn-in — see below)
 - [ ] **Hermes / Mattermost reporter** — post failed suite summary to `#eng`
 - [ ] **Infisical SDK helper** — `loadSecretsFromInfisical()` for local runs (machine identity)
 - [ ] **JUnit + HTML report merge** — single artifact for Gitea PR checks
 - [ ] **Network assert helpers** — fail if request hits `10.x` / wrong host after navigation
+
+## Ideas pulled from similar OSS tools (2026-07 research)
+
+See `docs/IDEAS.md` for expanded notes. Summary:
+
+- [x] **Network interception / network error monitor** — shipped (above)
+- [ ] **Test burn-in (flake detection)** — rerun a spec N times; mechanism for flake quarantine
+- [ ] **Scheduled synthetic monitoring** — evaluate `playwright-exporter` before bespoke smoke CLI
+- [ ] **Functional-core-for-everything audit** — optional function wrappers alongside class APIs
+- ~~Remote-write vs Pushgateway~~ — moot while Pushgateway is the path
+- Confirmed sane (no action): OpenAPI / axe / visual reg already under v0.5+

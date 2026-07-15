@@ -31,7 +31,6 @@
   },
   "files": [
     "dist",
-    "dashboards",
     "README.md",
     "ROADMAP.md",
     "LICENSE"
