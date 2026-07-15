@@ -46,5 +46,6 @@ npm view @levkin/playkit versions --registry https://git.levkin.ca/api/packages/
 
 ## Token setup
 
-See **`docs/OPS.md`** (Outstanding → Gitea npm publish token). First `v0.4.0`
-publish hit E401 until a package-scoped token is stored as `NPM_PUBLISH_TOKEN`.
+`@levkin/playkit@0.4.0` is on the registry. Tag/CI publish uses Actions secret
+`NPM_PUBLISH_TOKEN` (`write:package`). Local ops: vault
+`vault_playkit_npm_token` / `./scripts/publish-gitea-npm.sh`. See **`docs/OPS.md`**.

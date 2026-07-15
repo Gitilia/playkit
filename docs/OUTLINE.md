@@ -2,7 +2,7 @@
 
 Canonical prose stays in git (`README.md`, `docs/*`, `ROADMAP.md`).
 Browsable front door: **Outline** → collection **QA & Dev** → doc **Playkit**
-(`https://notes.levkin.ca/doc/playkit-3ekU0eghbV`).
+(`https://notes.levkin.ca/doc/playkit-CrPJq5x2qQ`).
 
 Ops status for this page (scopes, last sync): **`docs/OPS.md`**.
 
@@ -23,12 +23,11 @@ version, install pin, what’s-in-the-box digest, and links to repo docs.
 **Required API scopes** (Outline → Settings → API & Access): at least
 `collections.list`, `documents.list`, `documents.info`, `documents.create`,
 `documents.update`, and preferably `documents.delete` / `documents.archive`.
+Empty (unrestricted) scopes = full user access — fine for a personal kit-ops key.
 Without `documents.update` the script can create a first doc but cannot refresh
 an existing Playkit page (HTTP 403).
 
-As of 2026-07-15 the living page was synced to **v0.4.0** via signed-in UI
-because the vault API key still lacked `documents.update`. Fix the key scopes,
-then prefer this script for every future release.
+API sync to **v0.4.0** works as of 2026-07-15 (`vault_outline_api_key` has update/delete).
 
 ## When to update Outline
 
