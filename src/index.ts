@@ -27,6 +27,8 @@ export {
   NetworkErrorMonitor,
   matchesExcludePattern,
   dedupeNetworkErrors,
+  globToRegExp,
+  responseMatchesFilter,
   type ClickOptions,
   type FillOptions,
   type GotoOptions,

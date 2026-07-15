@@ -50,21 +50,25 @@ async function parseJsonSafe(raw: string | null): Promise<unknown> {
   }
 }
 
-function responsePredicate(
+/** Convert a Playwright-style glob to a RegExp (exported for unit tests). */
+export function globToRegExp(pattern: string): RegExp {
+  const escaped = pattern
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*\*/g, '.*')
+    .replace(/\*/g, '[^/?]*');
+  return new RegExp(escaped);
+}
+
+/** True when a response matches URL + optional method filters (exported for unit tests). */
+export function responseMatchesFilter(
   response: Response,
   url: string | RegExp,
   method?: string,
 ): boolean {
   if (!methodMatches(response.request(), method)) return false;
   if (url instanceof RegExp) return url.test(response.url());
-  // Prefer Playwright's built-in glob matching when possible via URL string compare.
   try {
-    return response.url().match(new RegExp(
-      url
-        .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-        .replace(/\*\*/g, '.*')
-        .replace(/\*/g, '[^/?]*'),
-    )) !== null;
+    return response.url().match(globToRegExp(url)) !== null;
   } catch {
     return response.url().includes(String(url));
   }
@@ -89,7 +93,7 @@ export function interceptNetworkCall(
 
   // Register the response waiter first so we never miss a fast request.
   const responsePromise = page.waitForResponse(
-    (res) => responsePredicate(res, url, method),
+    (res) => responseMatchesFilter(res, url, method),
     { timeout },
   );
 

@@ -19,6 +19,8 @@ export {
   NetworkErrorMonitor,
   matchesExcludePattern,
   dedupeNetworkErrors,
+  globToRegExp,
+  responseMatchesFilter,
   type FulfillResponse,
   type InterceptNetworkCallOptions,
   type InterceptedNetworkCall,
