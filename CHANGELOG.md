@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-07-15
 
-- **Self-test suite** — `selftest/` fake site + Playwright CI job (`docs/SELFTEST.md`, `npm run selftest`)
-- **Outline sync** — `scripts/outline-sync-playkit.py` creates/updates QA & Dev → Playkit (needs `documents.update` on the Outline API key)
-- Ops soak: Pushgateway (`:9091`) + Grafana `live-playkit` board **applied** on observability LXC (`make deploy-observability`); Prometheus scrape job `pushgateway` healthy; `RELEASE_TOKEN` present and Gitea release `v0.3.1` exists
+- **CLI** — `playkit init` scaffolds `e2e/` + CI snippet; `playkit smoke` post-deploy public-host + health ping
+- **Retry presets** — `PLAYKIT_RETRY_PRESET=strictCi|flakyNetwork|default` wired through `loadConfig` (`RETRY_PRESETS` export)
+- **Gitea npm registry** — `publishConfig` + release-job `npm publish`; consumer docs in `docs/NPM_REGISTRY.md`
+- Docs: CONSUMER/ROADMAP updated for v0.4; selftest + Outline sync remain as of 0.3.x line
 
 ## 0.3.1 — 2026-07-14
 
@@ -14,7 +15,9 @@
 - CI: add tag-triggered `release` job (`.gitea/workflows/ci.yml`) — re-runs build/test, verifies tag matches `package.json` version and `CHANGELOG.md` documents it, creates a Gitea release with an `npm pack` tarball attached. Requires a one-time `RELEASE_TOKEN` Actions secret.
 - Docs: bump install pin examples from `v0.1.0` to `v0.3.0` (README, CONSUMER.md)
 - Docs: lead with Mailpit (homelab default) instead of Mailtrap in README email section; use `createMailInbox()` + `readMailHtml()` in the example instead of a provider-specific client
-- Ops: Pushgateway + `live-playkit` Grafana board now provisioned via ansible `deploy/observability/` (pending `make deploy-observability`); removed the standalone `dashboards/playkit-overview.json` (superseded) and the `dashboards` entry from `package.json` `files`
+- Ops: Pushgateway + `live-playkit` Grafana board now provisioned via ansible `deploy/observability/`
+- **Self-test suite** — `selftest/` fake site + Playwright CI job (`docs/SELFTEST.md`)
+- **Outline sync** — `scripts/outline-sync-playkit.py`
 
 ## 0.3.0 — 2026-07-14
 
@@ -42,7 +45,5 @@ Initial release.
 
 - Browser: `BasePage`, `click`, `fill`, `safeGoto`, visibility waits, `waitForUrlHost`, `assertPublicHost`
 - API: `ApiClient` with status expectations and secret redaction
-- Logging: structured JSON logger
-- Metrics: `TimingCollector` + Prometheus Pushgateway push
-- Config: `loadConfig()` with private-host guard
-- Docs: README, ROADMAP, Grafana dashboard stub, consumer examples
+- Metrics: `TimingCollector` + Pushgateway helper
+- Config/logging helpers + consumer docs

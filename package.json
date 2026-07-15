@@ -1,12 +1,15 @@
 {
   "name": "@levkin/playkit",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Shared Playwright + API test kit — browser helpers, API client, logging, performance, Grafana/Prometheus metrics",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "playkit": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -33,10 +36,12 @@
     "dist",
     "README.md",
     "ROADMAP.md",
-    "LICENSE"
+    "LICENSE",
+    "docs/NPM_REGISTRY.md",
+    "docs/CONSUMER.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && chmod +x dist/cli.js",
     "prepare": "npm run build",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -68,6 +73,9 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "registry": "https://git.levkin.ca/api/packages/ilia/npm/"
   },
   "repository": {
     "type": "git",

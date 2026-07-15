@@ -7,6 +7,12 @@ export {
   isPrivateHost,
   type PlaykitConfig,
 } from './config/loadConfig.js';
+export {
+  RETRY_PRESETS,
+  resolveRetryPreset,
+  type RetryPreset,
+  type RetryPresetName,
+} from './config/retryPresets.js';
 export { createLogger, type Logger, type LogLevel } from './logging/logger.js';
 export { redactSecrets } from './logging/redact.js';
 

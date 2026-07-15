@@ -2,10 +2,27 @@
 
 ## 1. Depend on a release
 
+**Preferred (Gitea npm registry):**
+
 ```bash
-npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.1
+# .npmrc — see docs/NPM_REGISTRY.md
+# @levkin:registry=https://git.levkin.ca/api/packages/ilia/npm/
+npm install @levkin/playkit@0.4.0
 npm install -D @playwright/test
 npx playwright install chromium
+```
+
+**Fallback (git pin):**
+
+```bash
+npm install git+https://git.levkin.ca/ilia/playkit.git#v0.4.0
+```
+
+**Scaffold:**
+
+```bash
+npx --yes @levkin/playkit init
+# or: playkit init
 ```
 
 ## 2. Layout
@@ -25,12 +42,22 @@ Store in Infisical `LevkinOps` / `Development` (path e.g. `/playkit/punimtag`):
 
 - `PLAYKIT_BASE_URL=https://punimtagdev.levkin.ca`
 - `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` (dedicated test user — not a human’s password)
-- optional `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.24:9091` (Pushgateway on the observability LXC — config lives in ansible `deploy/observability/`; scrape job + `live-playkit` Grafana board are wired, but confirm `make deploy-observability` has actually been run before turning `PLAYKIT_METRICS_ENABLED=true` on in CI)
-- for mail specs: `PLAYKIT_MAIL_PROVIDER=mailpit` (default) + `MAILPIT_BASE_URL` / `MAILPIT_USER` / `MAILPIT_PASSWORD`, or `MAILTRAP_*` for SaaS
+- optional `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.24:9091`
+- optional `PLAYKIT_RETRY_PRESET=strictCi|flakyNetwork|default`
+- for mail specs: `PLAYKIT_MAIL_PROVIDER=mailpit` (default) + `MAILPIT_*`, or `MAILTRAP_*`
 
 Sync into Gitea Actions secrets for the consumer repo.
 
-## 4. CI job sketch
+## 4. Post-deploy smoke
+
+```bash
+PLAYKIT_BASE_URL=https://punimtagdev.levkin.ca playkit smoke
+# or: playkit smoke --path /api/health
+```
+
+## 5. CI job sketch
+
+See `e2e/ci-snippet.yml` from `playkit init`, or:
 
 ```yaml
 e2e:
@@ -42,19 +69,15 @@ e2e:
     - run: npx playwright test
       env:
         PLAYKIT_BASE_URL: ${{ secrets.PLAYKIT_BASE_URL }}
+        PLAYKIT_RETRY_PRESET: strictCi
         E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
         E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
-    - uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: playwright-report
-        path: playwright-report/
 ```
 
-## 5. Deploy rule
+## 6. Deploy rule
 
 PR → CI green (unit + e2e when secrets present) → merge → documented deploy script.  
 Do not claim “fixed” from a bare `pct exec` hotfix without a follow-up PR.
 
-**Adoption pause:** do not add playkit to other app repos until punimtag + kit CI
-have soaked for a few days. See `docs/IDEAS.md`.
+**Adoption pause:** soak punimtag + kit CI a few more days before migrating
+`screening` / `slack-sieve` / `portfolio`. See `docs/IDEAS.md`.

@@ -1,3 +1,5 @@
+import { resolveRetryPreset, type RetryPresetName } from './retryPresets.js';
+
 export interface PlaykitConfig {
   /** Public UI base URL (must be what users open in the browser). */
   baseUrl: string;
@@ -11,6 +13,8 @@ export interface PlaykitConfig {
   env: string;
   defaultTimeoutMs: number;
   actionRetries: number;
+  /** Active retry preset name (from PLAYKIT_RETRY_PRESET). */
+  retryPreset: RetryPresetName;
   metrics: {
     enabled: boolean;
     pushgatewayUrl?: string;
@@ -55,7 +59,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PlaykitConfig 
 
   const apiBaseUrl = (env.PLAYKIT_API_BASE_URL || env.API_BASE_URL || baseUrl).replace(/\/$/, '');
   const expectedHost = env.PLAYKIT_EXPECTED_HOST || hostFromUrl(baseUrl);
+  const preset = resolveRetryPreset(env.PLAYKIT_RETRY_PRESET);
+  // Explicit env overrides win over preset values.
   const forbidPrivateHosts = parseBool(env.PLAYKIT_FORBID_PRIVATE_HOSTS, true);
+  const defaultTimeoutMs = Number(env.PLAYKIT_TIMEOUT_MS || preset.defaultTimeoutMs);
+  const actionRetries = Number(
+    env.PLAYKIT_ACTION_RETRIES !== undefined && env.PLAYKIT_ACTION_RETRIES !== ''
+      ? env.PLAYKIT_ACTION_RETRIES
+      : preset.actionRetries,
+  );
 
   if (forbidPrivateHosts && isPrivateHost(expectedHost)) {
     throw new Error(
@@ -70,8 +82,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PlaykitConfig 
     forbidPrivateHosts,
     project: env.PLAYKIT_PROJECT || env.CI_PROJECT || 'unknown',
     env: env.PLAYKIT_ENV || env.APP_ENV || 'dev',
-    defaultTimeoutMs: Number(env.PLAYKIT_TIMEOUT_MS || 30_000),
-    actionRetries: Number(env.PLAYKIT_ACTION_RETRIES || 2),
+    defaultTimeoutMs,
+    actionRetries,
+    retryPreset: preset.name,
     metrics: {
       enabled: parseBool(env.PLAYKIT_METRICS_ENABLED, false),
       pushgatewayUrl: env.PLAYKIT_PUSHGATEWAY_URL || env.PUSHGATEWAY_URL,

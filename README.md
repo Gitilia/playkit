@@ -7,8 +7,14 @@ Use it as a library from any consumer repo (punimtag, MirrorMatch, …). App-spe
 ## Install (consumer)
 
 ```bash
-# git tag dependency (until a private npm registry is wired)
-npm install git+https://git.levkin.ca/ilia/playkit.git#v0.3.1
+# Preferred — Gitea npm registry (docs/NPM_REGISTRY.md)
+npm install @levkin/playkit@0.4.0
+
+# Fallback — git tag
+npm install git+https://git.levkin.ca/ilia/playkit.git#v0.4.0
+
+# Scaffold e2e/
+npx @levkin/playkit init
 
 # peer
 npm install -D @playwright/test
@@ -54,6 +60,8 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `PLAYKIT_API_BASE_URL` | no | Defaults to base URL |
 | `PLAYKIT_EXPECTED_HOST` | no | Defaults to host of base URL |
 | `PLAYKIT_FORBID_PRIVATE_HOSTS` | no | Default `true` — refuse `10.x` / localhost as expected host |
+| `PLAYKIT_RETRY_PRESET` | no | `default` \| `strictCi` \| `flakyNetwork` (timeouts/retries) |
+| `PLAYKIT_ACTION_RETRIES` / `PLAYKIT_TIMEOUT_MS` | no | Override preset values |
 | `PLAYKIT_PROJECT` | no | Metric / log label |
 | `PLAYKIT_ENV` | no | Metric / log label (`dev`/`qa`/`prod`) |
 | `PLAYKIT_METRICS_ENABLED` | no | Push timings to Pushgateway |
@@ -77,9 +85,9 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `saveStorageState` / `storageStateUse` | Auth once, reuse across specs |
 | `playkitFailureArtifacts` | Trace/video/screenshot only on failure |
 | `interceptNetworkCall` | Spy or mock the next matching page network call |
-| `startNetworkErrorMonitor` | Fail tests that silently collect HTTP 4xx/5xx |
+| `playkit` CLI | `init` scaffold + `smoke` post-deploy gate |
 
-See also `docs/NETWORK.md`, `docs/SELFTEST.md` (kit CI fake site), `docs/IDEAS.md` (OSS-borrowed backlog), `docs/OUTLINE.md` (live docs sync).
+See also `docs/NETWORK.md`, `docs/SELFTEST.md`, `docs/NPM_REGISTRY.md`, `docs/IDEAS.md`, `docs/OUTLINE.md`.
 
 ## Network (page traffic)
 
