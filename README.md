@@ -79,7 +79,7 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `interceptNetworkCall` | Spy or mock the next matching page network call |
 | `startNetworkErrorMonitor` | Fail tests that silently collect HTTP 4xx/5xx |
 
-See also `docs/NETWORK.md`, `docs/IDEAS.md` (OSS-borrowed backlog), `docs/OUTLINE.md` (live docs sync).
+See also `docs/NETWORK.md`, `docs/SELFTEST.md` (kit CI fake site), `docs/IDEAS.md` (OSS-borrowed backlog), `docs/OUTLINE.md` (live docs sync).
 
 ## Network (page traffic)
 
@@ -130,8 +130,20 @@ a real address will not appear in either. See ansible `docs/hardening/SECRETS.md
 npm ci
 npm run typecheck
 npm test
+npm run selftest   # fake site + Chromium (docs/SELFTEST.md)
 npm run build
 ```
+
+## Outline live docs
+
+After each release (or when consumer-facing docs change):
+
+```bash
+# needs OUTLINE_URL + OUTLINE_API_KEY (ansible: make vault-export-env)
+python3 scripts/outline-sync-playkit.py
+```
+
+See `docs/OUTLINE.md`.
 
 ## Release
 
@@ -141,7 +153,7 @@ npm run build
 
 Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then creates a Gitea release (with the `npm pack` tarball attached) via the API using a repo-scoped `RELEASE_TOKEN` Actions secret. If any check fails, no release is created — fix and re-tag. Consumers still pin the git tag (`#vX.Y.Z`); the Gitea release is for visibility/changelog, not an npm registry publish (see ROADMAP "private Gitea npm registry").
 
-4. **Update Outline** — after the release is green, sync the Playkit page under Outline **QA & Dev** (`notes.levkin.ca`). Checklist: `docs/OUTLINE.md`.
+4. **Update Outline** — `python3 scripts/outline-sync-playkit.py` (checklist: `docs/OUTLINE.md`).
 
 **One-time setup:** add a `RELEASE_TOKEN` secret (repo `Settings → Actions → Secrets` on `ilia/playkit`) scoped to create releases on this repo — separate from the `PLAYKIT_GIT_TOKEN` consumers use to clone it. (Named `RELEASE_TOKEN`, not `GITEA_TOKEN` — Gitea's Actions secrets API rejects that literal name as reserved, same reason `PLAYKIT_GIT_TOKEN` isn't called `GITEA_TOKEN` either.)
 

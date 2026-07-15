@@ -42,6 +42,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "selftest": "playwright test -c selftest/playwright.config.ts",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build",
     "example:api": "tsx examples/api/health.example.ts"
