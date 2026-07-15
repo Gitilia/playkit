@@ -15,6 +15,16 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 - [ ] End adoption pause — migrate first extra consumer (`screening` candidate)
 - [ ] Evaluate `playwright-exporter` for scheduled synthetics (may supersede bespoke cron wrappers around `playkit smoke`)
 
+## Done since v0.4.0 (resilient UI automation)
+
+Pulled from real friction driving LinkedIn (third-party, bot-walled, no test ids) from a Cursor/Camoufox automation — see the resume repo's `scripts/linkedin-polish-all.mjs` for the original hand-rolled versions these replace.
+
+- [x] `byAriaLabel` / `clickByAriaLabel` — regex-over-`aria-label` locator, scoped to page or a narrower locator
+- [x] `withDialog` — reopen-and-retry wrapper for modals that can silently close mid-flow
+- [x] `fillContentEditable` — real-keyboard typing into `contenteditable` rich text with paragraph breaks
+- [x] `runPersistentSession` — flag-file-driven long-lived browser session (RUN/READY/CLOSE), auto-relaunch on crash
+- [x] `NetworkErrorMonitor` `useDefaultExcludes` + `COMMON_NOISE_PATTERNS` (ad/telemetry noise preset)
+
 ## Done since v0.4.0 (ops)
 
 - [x] **Wire `NPM_PUBLISH_TOKEN` / `write:package`** — `@levkin/playkit@0.4.0` published; Actions secret + `vault_playkit_npm_token`; release job no longer soft-fails (`docs/OPS.md`)

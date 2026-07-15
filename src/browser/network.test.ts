@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Page, Request, Response, Route } from '@playwright/test';
 import {
+  COMMON_NOISE_PATTERNS,
   dedupeNetworkErrors,
   globToRegExp,
   interceptNetworkCall,
@@ -178,6 +179,39 @@ describe('NetworkErrorMonitor', () => {
       expect.objectContaining({ status: 502, url: 'https://app/fail' }),
     ]);
     net.stop();
+  });
+
+  it('leaves default noise (ad/telemetry pixels) untouched unless useDefaultExcludes is set', () => {
+    const page = createMockPage();
+    const net = startNetworkErrorMonitor(page);
+    page.emitResponse(mockResponse({ status: 502, url: 'https://www.googletagmanager.com/gtm.js' }));
+    expect(net.getErrors()).toHaveLength(1);
+    net.stop();
+  });
+
+  it('useDefaultExcludes filters COMMON_NOISE_PATTERNS in addition to custom excludePatterns', () => {
+    const page = createMockPage();
+    const net = startNetworkErrorMonitor(page, {
+      useDefaultExcludes: true,
+      excludePatterns: ['my-own-cdn.example.com'],
+    });
+
+    page.emitResponse(mockResponse({ status: 502, url: 'https://www.googletagmanager.com/gtm.js' }));
+    page.emitResponse(mockResponse({ status: 500, url: 'https://my-own-cdn.example.com/x.js' }));
+    page.emitResponse(mockResponse({ status: 503, url: 'https://app.example.com/real-endpoint' }));
+
+    expect(net.getErrors()).toEqual([
+      expect.objectContaining({ url: 'https://app.example.com/real-endpoint' }),
+    ]);
+    net.stop();
+  });
+
+  it('COMMON_NOISE_PATTERNS matches the ad/telemetry hosts it documents', () => {
+    expect(matchesExcludePattern('https://www.doubleclick.net/x', COMMON_NOISE_PATTERNS)).toBe(true);
+    expect(matchesExcludePattern('https://connect.facebook.net/x', COMMON_NOISE_PATTERNS)).toBe(true);
+    expect(matchesExcludePattern('https://app.example.com/api/users', COMMON_NOISE_PATTERNS)).toBe(
+      false,
+    );
   });
 
   it('stop() ignores further responses', () => {

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Resilient UI automation helpers** — for driving third-party/adversarial SPAs (no stable test ids, occasional bot walls) rather than your own instrumented app:
+  - `byAriaLabel()` / `clickByAriaLabel()` — find/click by a regex over `aria-label`, scoped to a `Page` or a narrower `Locator` (e.g. one dialog)
+  - `withDialog()` — retry an action against a modal that might have silently closed, reopening it first via a caller-supplied `reopen()`
+  - `fillContentEditable()` — type into `contenteditable` rich-text fields (not just `<textarea>`), splitting on blank lines so multi-paragraph/bulleted text renders as separate blocks instead of collapsing
+  - `runPersistentSession()` — keep one browser session open across many runs via `RUN`/`READY`/`CLOSE` flag files instead of relaunching (and re-authenticating) every time; auto-relaunches on an unexpected crash
+  - `NetworkErrorMonitor`: `useDefaultExcludes` + exported `COMMON_NOISE_PATTERNS` (ad/telemetry pixel hosts) so consumers stop hand-rolling the same exclude list per project
 - Ops: npm publish is hard-required in the tag release job (removed soft-fail); `NPM_PUBLISH_TOKEN` + Outline update scopes documented as done in `docs/OPS.md` / `ROADMAP.md`
 
 ## 0.4.0 — 2026-07-15

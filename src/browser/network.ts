@@ -162,9 +162,32 @@ export interface NetworkError {
   timestamp: string;
 }
 
+/**
+ * Ad/telemetry/tracking-pixel hosts that routinely 4xx/5xx in the background
+ * on third-party sites and are almost never what you're debugging. Opt in via
+ * `useDefaultExcludes: true` — off by default so existing consumers asserting
+ * against their own app's traffic see no behavior change.
+ */
+export const COMMON_NOISE_PATTERNS: Array<string | RegExp> = [
+  'doubleclick.net',
+  'googlesyndication.com',
+  'google-analytics.com',
+  'googletagmanager.com',
+  'facebook.com/tr',
+  'connect.facebook.net',
+  'segment.io',
+  'segment.com',
+  /\bads?\b/i,
+  /\/pixel(\/|\?|$)/i,
+  /\btelemetry\b/i,
+  /\btrack(ing)?\b/i,
+];
+
 export interface NetworkErrorMonitorOptions {
   /** Skip matching URLs (string substring or RegExp). */
   excludePatterns?: Array<string | RegExp>;
+  /** Also skip anything matching `COMMON_NOISE_PATTERNS` (default false). */
+  useDefaultExcludes?: boolean;
   /** Minimum status to treat as an error (default 400). */
   minStatus?: number;
   logger?: Logger;
@@ -202,7 +225,9 @@ export class NetworkErrorMonitor {
   ) {
     const log = options.logger ?? createLogger({ name: 'NetworkErrorMonitor' });
     const minStatus = options.minStatus ?? 400;
-    const exclude = options.excludePatterns ?? [];
+    const exclude = options.useDefaultExcludes
+      ? [...COMMON_NOISE_PATTERNS, ...(options.excludePatterns ?? [])]
+      : options.excludePatterns ?? [];
 
     this.onResponse = (response: Response) => {
       if (this.stopped) return;
