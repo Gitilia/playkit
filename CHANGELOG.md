@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Ops: npm publish is hard-required in the tag release job (removed soft-fail); `NPM_PUBLISH_TOKEN` + Outline update scopes documented as done in `docs/OPS.md` / `ROADMAP.md`
+
 ## 0.4.0 — 2026-07-15
 
 - **CLI** — `playkit init` scaffolds `e2e/` + CI snippet; `playkit smoke` post-deploy public-host + health ping

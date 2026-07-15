@@ -155,15 +155,13 @@ jobs:
             -F "attachment=@${TARBALL}" \
             "https://git.levkin.ca/api/v1/repos/ilia/playkit/releases/${RELEASE_ID}/assets"
       - name: Publish to Gitea npm registry
-        # RELEASE_TOKEN (or optional NPM_PUBLISH_TOKEN) needs write:package — docs/NPM_REGISTRY.md
-        # Soft-fail: Gitea Release + tarball already published above; package registry
-        # auth is a separate token scope and should not block the git release.
-        continue-on-error: true
+        # Prefer NPM_PUBLISH_TOKEN (write:package); fall back to RELEASE_TOKEN if it has package scope.
+        # See docs/NPM_REGISTRY.md / docs/OPS.md.
         run: |
           TOKEN="${{ secrets.NPM_PUBLISH_TOKEN }}"
           if [ -z "$TOKEN" ]; then TOKEN="${{ secrets.RELEASE_TOKEN }}"; fi
           if [ -z "$TOKEN" ]; then
-            echo "::error::set RELEASE_TOKEN or NPM_PUBLISH_TOKEN with write:package"
+            echo "::error::set NPM_PUBLISH_TOKEN (or RELEASE_TOKEN) with write:package"
             exit 1
           fi
           echo "@levkin:registry=https://git.levkin.ca/api/packages/ilia/npm/" > /tmp/playkit.npmrc
