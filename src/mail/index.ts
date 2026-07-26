@@ -4,7 +4,6 @@
 import { createLogger, type Logger } from '../logging/logger.js';
 import { MailpitClient, loadMailpitConfig } from './mailpit.js';
 import { MailtrapClient, loadMailtrapConfig } from './mailtrap.js';
-import { extractLinks, firstLinkMatching } from './mailtrap.js';
 
 export type MailInbox = MailpitClient | MailtrapClient;
 
