@@ -216,7 +216,7 @@ See `docs/OUTLINE.md`.
 2. Update `CHANGELOG.md` with a `## X.Y.Z` section (the release job extracts this verbatim as release notes)
 3. Tag `vX.Y.Z` and push
 
-Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then creates a Gitea release (with the `npm pack` tarball attached) via the API using a repo-scoped `RELEASE_TOKEN` Actions secret. If any check fails, no release is created — fix and re-tag. Consumers still pin the git tag (`#vX.Y.Z`); the Gitea release is for visibility/changelog, not an npm registry publish (see ROADMAP "private Gitea npm registry").
+Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then (a) creates a Gitea release with the `npm pack` tarball attached (via `RELEASE_TOKEN`) and (b) **publishes the package to the Gitea npm registry** (`https://git.levkin.ca/api/packages/ilia/npm/`, via `NPM_PUBLISH_TOKEN`, falling back to `RELEASE_TOKEN`). If any check fails, nothing is released or published — fix and re-tag. Consumers install from the registry (`npm install @levkin/playkit@X.Y.Z`, see `docs/NPM_REGISTRY.md`) or pin the git tag (`#vX.Y.Z`) as a fallback.
 
 4. **Update Outline** — `python3 scripts/outline-sync-playkit.py` (checklist: `docs/OUTLINE.md`).
 
