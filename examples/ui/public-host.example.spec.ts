@@ -2,7 +2,7 @@
  * Example UI pattern (not executed in kit CI — consumers own Playwright projects).
  *
  * Critical assert: after sign-out, URL host must remain the public host.
- * This is the failure mode from punimtag #57 (redirect to 10.0.10.121:3001).
+ * This is the failure mode from punimtag #57 (redirect to 10.0.10.x:3001).
  */
 import { test, expect } from '@playwright/test';
 import { loadConfig, waitForUrlHost, assertPublicHost, TimingCollector } from '../../src/index.js';

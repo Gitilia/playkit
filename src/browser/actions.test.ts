@@ -101,7 +101,7 @@ describe('waitForUrlHost', () => {
   });
 
   it('throws a descriptive error naming both hosts when the host never matches', async () => {
-    const page = { url: () => 'http://10.0.10.45:3000/dashboard' } as unknown as Page;
+    const page = { url: () => 'http://10.0.10.x:3000/dashboard' } as unknown as Page;
     await expect(
       waitForUrlHost(page, 'app.levkin.ca', { timeout: 0, logger: silentLogger }),
     ).rejects.toThrow(/Expected URL host "app\.levkin\.ca" but got "10\.0\.10\.45"/);
@@ -114,7 +114,7 @@ describe('assertPublicHost', () => {
     expect(() => assertPublicHost('punimtagdev.levkin.ca')).not.toThrow();
   });
 
-  it.each(['https://10.0.10.45:3000', 'http://localhost:3000', 'https://192.168.1.10', '127.0.0.1'])(
+  it.each(['https://10.0.10.x:3000', 'http://localhost:3000', 'https://192.168.1.10', '127.0.0.1'])(
     'rejects private host %s',
     (input) => {
       expect(() => assertPublicHost(input)).toThrow(/Refusing private host/);
@@ -122,7 +122,7 @@ describe('assertPublicHost', () => {
   );
 
   it('allows private hosts when forbidPrivate is false (intentional LAN runs)', () => {
-    expect(() => assertPublicHost('http://10.0.10.45:3000', false)).not.toThrow();
+    expect(() => assertPublicHost('http://10.0.10.x:3000', false)).not.toThrow();
   });
 });
 

@@ -5,7 +5,7 @@ import { TimingCollector } from '../metrics/index.js';
 
 describe('isPrivateHost', () => {
   it('detects LAN and localhost', () => {
-    expect(isPrivateHost('10.0.10.121')).toBe(true);
+    expect(isPrivateHost('10.0.10.x')).toBe(true);
     expect(isPrivateHost('192.168.1.1')).toBe(true);
     expect(isPrivateHost('172.16.0.2')).toBe(true);
     expect(isPrivateHost('localhost')).toBe(true);
@@ -21,7 +21,7 @@ describe('loadConfig', () => {
   it('rejects private expected host by default', () => {
     expect(() =>
       loadConfig({
-        PLAYKIT_BASE_URL: 'http://10.0.10.121:3001',
+        PLAYKIT_BASE_URL: 'http://10.0.10.x:3001',
       }),
     ).toThrow(/private/);
   });

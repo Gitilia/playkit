@@ -42,7 +42,7 @@ Store in Infisical `LevkinOps` / `Development` (path e.g. `/playkit/punimtag`):
 
 - `PLAYKIT_BASE_URL=https://punimtagdev.levkin.ca`
 - `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` (dedicated test user — not a human’s password)
-- optional `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.24:9091`
+- optional `PLAYKIT_PUSHGATEWAY_URL=http://10.0.10.x:9091`
 - optional `PLAYKIT_RETRY_PRESET=strictCi|flakyNetwork|default`
 - for mail specs: `PLAYKIT_MAIL_PROVIDER=mailpit` (default) + `MAILPIT_*`, or `MAILTRAP_*`
 
