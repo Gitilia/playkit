@@ -49,7 +49,7 @@ function matchesSubject(subject: string, want?: string | RegExp): boolean {
  * Load Mailpit config from env. Returns null if MAILPIT_BASE_URL unset.
  *
  * Env:
- * - PLAYKIT_MAILPIT_BASE_URL / MAILPIT_BASE_URL (e.g. http://10.0.10.x:8025)
+ * - PLAYKIT_MAILPIT_BASE_URL / MAILPIT_BASE_URL (e.g. http://10.255.255.1:8025)
  * - MAILPIT_USER / MAILPIT_PASSWORD (basic auth)
  */
 export function loadMailpitConfig(env: NodeJS.ProcessEnv = process.env): MailpitConfig | null {
