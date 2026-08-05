@@ -1,8 +1,12 @@
 # @levkin/playkit
 
-Shared **Playwright + API** test kit for Levkin / homelab apps.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-ready-45ba4b)](https://playwright.dev/)
 
-Use it as a library from any consumer repo (punimtag, MirrorMatch, …). App-specific Page Objects and specs stay in the consumer; reusable helpers, logging, API client, performance timings, and Grafana/Prometheus metrics live here.
+**Shared Playwright + API test helpers** — resilient UI actions, API client, timings, and metrics used across Levkin apps.
+
+> Public mirror: [github.com/Gitilia/playkit](https://github.com/Gitilia/playkit) · issues welcome here; CI/publish run on the private forge.
 
 ## Install (consumer)
 
