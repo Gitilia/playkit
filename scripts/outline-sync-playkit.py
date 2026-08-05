@@ -70,7 +70,7 @@ def playkit_markdown(version: str) -> str:
 
 ## Metrics
 
-- Pushgateway: `http://10.0.10.24:9091` (LAN)
+- Pushgateway: `http://10.255.255.1:9091` (LAN)
 - Grafana: `dash.levkin.ca` → **Live — Playkit e2e** (`live-playkit`)
 - Enable in CI with `PLAYKIT_METRICS_ENABLED=true` + `PLAYKIT_PUSHGATEWAY_URL`
 

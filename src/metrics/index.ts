@@ -78,7 +78,7 @@ export interface MetricsPushOptions {
 
 /**
  * Push metrics to a Prometheus Pushgateway.
- * Example URL: http://10.0.10.24:9091
+ * Example URL: http://10.255.255.1:9091
  */
 export async function pushPrometheusMetrics(
   collector: TimingCollector,

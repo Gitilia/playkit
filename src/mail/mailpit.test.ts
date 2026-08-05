@@ -9,12 +9,12 @@ describe('loadMailpitConfig', () => {
   it('loads base url and auth', () => {
     expect(
       loadMailpitConfig({
-        MAILPIT_BASE_URL: 'http://10.0.10.45:8025',
+        MAILPIT_BASE_URL: 'http://10.255.255.1:8025',
         MAILPIT_USER: 'u',
         MAILPIT_PASSWORD: 'p',
       }),
     ).toEqual({
-      baseUrl: 'http://10.0.10.45:8025',
+      baseUrl: 'http://10.255.255.1:8025',
       user: 'u',
       password: 'p',
     });

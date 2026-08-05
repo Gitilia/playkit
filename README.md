@@ -65,7 +65,7 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `PLAYKIT_PROJECT` | no | Metric / log label |
 | `PLAYKIT_ENV` | no | Metric / log label (`dev`/`qa`/`prod`) |
 | `PLAYKIT_METRICS_ENABLED` | no | Push timings to Pushgateway |
-| `PLAYKIT_PUSHGATEWAY_URL` | if metrics | e.g. `http://10.0.10.24:9091` |
+| `PLAYKIT_PUSHGATEWAY_URL` | if metrics | e.g. `http://10.255.255.1:9091` |
 | `PLAYKIT_LOG_LEVEL` | no | `debug` \| `info` \| `warn` \| `error` |
 
 **Secrets:** put test credentials and pushgateway tokens in Infisical (`LevkinOps`) and sync into Gitea Actions — see ansible `docs/hardening/SECRETS.md`. Never commit passwords.
@@ -166,7 +166,7 @@ await runPersistentSession({
 
 `createMailInbox()` picks the provider from `PLAYKIT_MAIL_PROVIDER` (default
 `mailpit`) so specs don't need to know which backend is behind it. Prefer
-**Mailpit** — it's our homelab SMTP trap (`10.0.10.45`, no external
+**Mailpit** — it's our homelab SMTP trap (`10.255.255.1`, no external
 dependency); use Mailtrap only if you specifically want the SaaS sandbox.
 
 ```ts
@@ -184,7 +184,7 @@ assertPublicHost(link!);
 ```
 
 **Important:** the mail client only sees mail if the app's SMTP actually
-points at that trap (Mailpit `10.0.10.45:1025` in DEV, or Mailtrap's
+points at that trap (Mailpit `10.255.255.1:1025` in DEV, or Mailtrap's
 `sandbox.smtp.mailtrap.io` + inbox credentials for SaaS). Sending via Gmail to
 a real address will not appear in either. See ansible `docs/hardening/SECRETS.md`
 (`## Playkit / punimtag e2e secrets`).
