@@ -4,11 +4,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-ready-45ba4b)](https://playwright.dev/)
 
-Shared Playwright and API test helpers for Levkin apps: resilient UI
-actions, API client, timings, and metrics.
+**Shared Playwright + API test helpers** — resilient UI actions, API client, timings, and metrics used across Levkin apps.
 
-Public mirror: [github.com/Gitilia/playkit](https://github.com/Gitilia/playkit).
-Issues welcome there; CI and publish run on the private forge.
+> Public mirror: [github.com/Gitilia/playkit](https://github.com/Gitilia/playkit) · issues welcome here; CI/publish run on the private forge.
 
 ## Install (consumer)
 
@@ -65,16 +63,16 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `PLAYKIT_BASE_URL` / `BASE_URL` | yes | Public UI URL (e.g. `https://punimtagdev.levkin.ca`) |
 | `PLAYKIT_API_BASE_URL` | no | Defaults to base URL |
 | `PLAYKIT_EXPECTED_HOST` | no | Defaults to host of base URL |
-| `PLAYKIT_FORBID_PRIVATE_HOSTS` | no | Default `true`, refuse `10.x` / localhost as expected host |
+| `PLAYKIT_FORBID_PRIVATE_HOSTS` | no | Default `true` — refuse `10.x` / localhost as expected host |
 | `PLAYKIT_RETRY_PRESET` | no | `default` \| `strictCi` \| `flakyNetwork` (timeouts/retries) |
 | `PLAYKIT_ACTION_RETRIES` / `PLAYKIT_TIMEOUT_MS` | no | Override preset values |
 | `PLAYKIT_PROJECT` | no | Metric / log label |
 | `PLAYKIT_ENV` | no | Metric / log label (`dev`/`qa`/`prod`) |
 | `PLAYKIT_METRICS_ENABLED` | no | Push timings to Pushgateway |
-| `PLAYKIT_PUSHGATEWAY_URL` | if metrics | e.g. `http://10.255.255.1:9091` |
+| `PLAYKIT_PUSHGATEWAY_URL` | if metrics | e.g. `http://<pushgateway-host>:9091` |
 | `PLAYKIT_LOG_LEVEL` | no | `debug` \| `info` \| `warn` \| `error` |
 
-**Secrets:** put test credentials and pushgateway tokens in Infisical (`LevkinOps`) and sync into Gitea Actions, see ansible `docs/hardening/SECRETS.md`. Never commit passwords.
+**Secrets:** put test credentials and pushgateway tokens in Infisical (`LevkinOps`) and sync into Gitea Actions — see ansible `docs/hardening/SECRETS.md`. Never commit passwords.
 
 ## What’s in the box
 
@@ -118,7 +116,7 @@ try {
 ## Resilient UI automation (third-party / adversarial SPAs)
 
 `click`/`fill`/`waitForVisible` above assume you already have a correct
-`Locator`, great when you control the markup and have stable test ids. These
+`Locator` — great when you control the markup and have stable test ids. These
 helpers are for the opposite case: driving a third-party site you don't
 control, where selectors are dynamic/compound (aria-labels that embed
 record-specific text), rich-text fields aren't real `<textarea>`s, modals
@@ -172,7 +170,7 @@ await runPersistentSession({
 
 `createMailInbox()` picks the provider from `PLAYKIT_MAIL_PROVIDER` (default
 `mailpit`) so specs don't need to know which backend is behind it. Prefer
-**Mailpit**, it's our homelab SMTP trap (`10.255.255.1`, no external
+**Mailpit** — it's our homelab SMTP trap (`<mailpit-host>`, no external
 dependency); use Mailtrap only if you specifically want the SaaS sandbox.
 
 ```ts
@@ -190,7 +188,7 @@ assertPublicHost(link!);
 ```
 
 **Important:** the mail client only sees mail if the app's SMTP actually
-points at that trap (Mailpit `10.255.255.1:1025` in DEV, or Mailtrap's
+points at that trap (Mailpit `<mailpit-host>:1025` in DEV, or Mailtrap's
 `sandbox.smtp.mailtrap.io` + inbox credentials for SaaS). Sending via Gmail to
 a real address will not appear in either. See ansible `docs/hardening/SECRETS.md`
 (`## Playkit / punimtag e2e secrets`).
@@ -222,11 +220,11 @@ See `docs/OUTLINE.md`.
 2. Update `CHANGELOG.md` with a `## X.Y.Z` section (the release job extracts this verbatim as release notes)
 3. Tag `vX.Y.Z` and push
 
-Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then (a) creates a Gitea release with the `npm pack` tarball attached (via `RELEASE_TOKEN`) and (b) **publishes the package to the Gitea npm registry** (`https://git.levkin.ca/api/packages/ilia/npm/`, via `NPM_PUBLISH_TOKEN`, falling back to `RELEASE_TOKEN`). If any check fails, nothing is released or published, fix and re-tag. Consumers install from the registry (`npm install @levkin/playkit@X.Y.Z`, see `docs/NPM_REGISTRY.md`) or pin the git tag (`#vX.Y.Z`) as a fallback.
+Pushing the tag triggers `.gitea/workflows/ci.yml`'s `release` job: it re-runs typecheck/test/build, verifies the tag matches `package.json`'s `version` and that `CHANGELOG.md` documents it, then (a) creates a Gitea release with the `npm pack` tarball attached (via `RELEASE_TOKEN`) and (b) **publishes the package to the Gitea npm registry** (`https://git.levkin.ca/api/packages/ilia/npm/`, via `NPM_PUBLISH_TOKEN`, falling back to `RELEASE_TOKEN`). If any check fails, nothing is released or published — fix and re-tag. Consumers install from the registry (`npm install @levkin/playkit@X.Y.Z`, see `docs/NPM_REGISTRY.md`) or pin the git tag (`#vX.Y.Z`) as a fallback.
 
-4. **Update Outline**, `python3 scripts/outline-sync-playkit.py` (checklist: `docs/OUTLINE.md`).
+4. **Update Outline** — `python3 scripts/outline-sync-playkit.py` (checklist: `docs/OUTLINE.md`).
 
-**One-time setup:** add a `RELEASE_TOKEN` secret (repo `Settings → Actions → Secrets` on `ilia/playkit`) scoped to create releases on this repo, separate from the `PLAYKIT_GIT_TOKEN` consumers use to clone it. (Named `RELEASE_TOKEN`, not `GITEA_TOKEN`, Gitea's Actions secrets API rejects that literal name as reserved, same reason `PLAYKIT_GIT_TOKEN` isn't called `GITEA_TOKEN` either.)
+**One-time setup:** add a `RELEASE_TOKEN` secret (repo `Settings → Actions → Secrets` on `ilia/playkit`) scoped to create releases on this repo — separate from the `PLAYKIT_GIT_TOKEN` consumers use to clone it. (Named `RELEASE_TOKEN`, not `GITEA_TOKEN` — Gitea's Actions secrets API rejects that literal name as reserved, same reason `PLAYKIT_GIT_TOKEN` isn't called `GITEA_TOKEN` either.)
 
 ## License
 
