@@ -7,11 +7,13 @@ export {
   waitForHidden,
   waitForUrlHost,
   assertPublicHost,
+  setFilesViaChooser,
   type ClickOptions,
   type FillOptions,
   type GotoOptions,
+  type SetFilesViaChooserOptions,
 } from './actions.js';
-export { saveStorageState, storageStateUse } from './storageState.js';
+export { saveStorageState, storageStateUse, cookiesToBearer, type StorageStateLike } from './storageState.js';
 export { playkitFailureArtifacts } from './playwrightPreset.js';
 export {
   interceptNetworkCall,

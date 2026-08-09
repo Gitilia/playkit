@@ -89,7 +89,9 @@ test('sign-out stays on public host', async ({ page, playkitConfig, timings }) =
 | `saveStorageState` / `storageStateUse` | Auth once, reuse across specs |
 | `playkitFailureArtifacts` | Trace/video/screenshot only on failure |
 | `interceptNetworkCall` | Spy or mock the next matching page network call |
-| `byAriaLabel` / `clickByAriaLabel` | Find/click by a regex over `aria-label`, scoped to a page or a narrower locator |
+| `byAriaLabel` / `clickByAriaLabel` | Find/click by a regex over `aria-label`; `clickByAriaLabel` prefers visible matches (`preferVisible`) |
+| `setFilesViaChooser` | Wait for native filechooser then `setFiles` (Image / Upload menus) |
+| `cookiesToBearer` | `Bearer …` from Playwright storage-state cookies for follow-up API calls |
 | `withDialog` | Retry an action against a modal that might have silently closed, reopening it first |
 | `fillContentEditable` | Type into `contenteditable` rich-text fields with real paragraph breaks |
 | `runPersistentSession` | Keep one browser session open across runs via flag files instead of relaunching/re-authenticating |
@@ -130,12 +132,22 @@ import {
   withDialog,
   fillContentEditable,
   runPersistentSession,
+  setFilesViaChooser,
+  cookiesToBearer,
 } from '@levkin/playkit';
 
 // aria-label is often compound + record-specific ("Edit Staff Automation
 // Engineer at NiyaSoft") — a regex survives per-record text variation better
 // than an exact string copied from one DOM dump.
 await clickByAriaLabel(page, /Edit.*at NiyaSoft/i);
+// Defaults preferVisible:true — skips hidden Radix/menu twins with the same label.
+
+await setFilesViaChooser(page, async () => {
+  await page.getByText(/^Image$/i).click();
+}, '/tmp/shot.jpg');
+
+const auth = cookiesToBearer('.session/state.json', 'accessToken');
+// Authorization: Bearer …
 
 // Re-open the dialog and retry if it closed underneath you mid-flow.
 await withDialog(
