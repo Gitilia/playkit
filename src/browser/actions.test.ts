@@ -7,6 +7,7 @@ import {
   click,
   fill,
   safeGoto,
+  setFilesViaChooser,
   waitForUrlHost,
 } from './actions.js';
 
@@ -162,5 +163,32 @@ describe('BasePage', () => {
     await basePage.fill(locator, 'value');
     expect(locator.click).toHaveBeenCalledTimes(1);
     expect(locator.fill).toHaveBeenCalledWith('value', { timeout: 30_000 });
+  });
+});
+
+describe('setFilesViaChooser', () => {
+  it('waits for filechooser, runs trigger, then setFiles', async () => {
+    const setFiles = vi.fn(async () => undefined);
+    const waitForEvent = vi.fn(async () => ({ setFiles }));
+    const page = { waitForEvent } as unknown as Page;
+    const trigger = vi.fn(async () => undefined);
+
+    await setFilesViaChooser(page, trigger, '/tmp/a.jpg', { logger: silentLogger, timeout: 5_000 });
+
+    expect(waitForEvent).toHaveBeenCalledWith('filechooser', { timeout: 5_000 });
+    expect(trigger).toHaveBeenCalledTimes(1);
+    expect(setFiles).toHaveBeenCalledWith(['/tmp/a.jpg']);
+  });
+
+  it('accepts multiple file paths', async () => {
+    const setFiles = vi.fn(async () => undefined);
+    const page = {
+      waitForEvent: vi.fn(async () => ({ setFiles })),
+    } as unknown as Page;
+
+    await setFilesViaChooser(page, async () => undefined, ['/a.png', '/b.png'], {
+      logger: silentLogger,
+    });
+    expect(setFiles).toHaveBeenCalledWith(['/a.png', '/b.png']);
   });
 });

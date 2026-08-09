@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Outline-session hardening** (aria twins, uploads, cookie→API):
+  - `byAriaLabel` / `clickByAriaLabel`: `preferVisible` option — skip hidden Radix/menu twins; **`clickByAriaLabel` defaults `preferVisible: true`**, falling back to the first match if none are visible
+  - `setFilesViaChooser(page, trigger, files)` — wait for `filechooser` then `setFiles` (slash-menu Image / Upload flows)
+  - `cookiesToBearer(storageState | path, cookieName)` — `Bearer <token>` from Playwright storage-state cookies (e.g. Outline `accessToken`)
 - **Resilient UI automation helpers** — for driving third-party/adversarial SPAs (no stable test ids, occasional bot walls) rather than your own instrumented app:
   - `byAriaLabel()` / `clickByAriaLabel()` — find/click by a regex over `aria-label`, scoped to a `Page` or a narrower `Locator` (e.g. one dialog)
   - `withDialog()` — retry an action against a modal that might have silently closed, reopening it first via a caller-supplied `reopen()`

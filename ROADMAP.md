@@ -20,6 +20,9 @@ Living plan for making `@levkin/playkit` more useful across Levkin repos.
 Pulled from real friction driving LinkedIn (third-party, bot-walled, no test ids) from a Cursor/Camoufox automation — see the resume repo's `scripts/linkedin-polish-all.mjs` for the original hand-rolled versions these replace.
 
 - [x] `byAriaLabel` / `clickByAriaLabel` — regex-over-`aria-label` locator, scoped to page or a narrower locator
+- [x] `preferVisible` on aria helpers (`clickByAriaLabel` defaults on) — skip hidden Radix twins
+- [x] `setFilesViaChooser` — filechooser + setFiles for upload/slash-menu flows
+- [x] `cookiesToBearer` — storage-state cookie → `Authorization: Bearer …`
 - [x] `withDialog` — reopen-and-retry wrapper for modals that can silently close mid-flow
 - [x] `fillContentEditable` — real-keyboard typing into `contenteditable` rich text with paragraph breaks
 - [x] `runPersistentSession` — flag-file-driven long-lived browser session (RUN/READY/CLOSE), auto-relaunch on crash

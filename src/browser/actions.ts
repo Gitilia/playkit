@@ -154,6 +154,34 @@ export function assertPublicHost(urlOrHost: string, forbidPrivate = true): void 
   }
 }
 
+export interface SetFilesViaChooserOptions {
+  timeout?: number;
+  logger?: Logger;
+}
+
+/**
+ * Open a native file chooser (slash-menu Image, Upload button, etc.), then
+ * set the chosen files. Starts waiting for `filechooser` before running
+ * `trigger` so the event is never missed.
+ */
+export async function setFilesViaChooser(
+  page: Page,
+  trigger: () => Promise<void>,
+  files: string | string[],
+  options?: SetFilesViaChooserOptions,
+): Promise<void> {
+  const log = options?.logger ?? createLogger({ name: 'setFilesViaChooser' });
+  const timeout = options?.timeout ?? 30_000;
+  const paths = Array.isArray(files) ? files : [files];
+  log.debug('setFilesViaChooser', { files: paths.length, timeout });
+
+  const [chooser] = await Promise.all([
+    page.waitForEvent('filechooser', { timeout }),
+    trigger(),
+  ]);
+  await chooser.setFiles(paths);
+}
+
 /**
  * Thin Page Object base — prefer getByRole / getByTestId in subclasses.
  */
