@@ -7,7 +7,7 @@ Living ops/status after releases. Update when an item closes.
 | Item | Status |
 |------|--------|
 | Pushgateway + `live-playkit` Grafana board | Applied (`<pushgateway-host>:9091`) |
-| Tag release workflow + `RELEASE_TOKEN` | Working (`v0.3.1`, `v0.4.0` Gitea releases) |
+| Tag release workflow + `RELEASE_TOKEN` | Working (`v0.3.1`, `v0.4.0`, `v0.5.0` Gitea releases) |
 | Selftest CI | Green (Playwright image pinned to package version) |
 | Outline **QA & Dev → Playkit** @ v0.4.0 | Synced via API 2026-07-15 → https://notes.levkin.ca/doc/playkit-CrPJq5x2qQ |
 | Playkit sync probe cleanup | Deleted via API 2026-07-15 |

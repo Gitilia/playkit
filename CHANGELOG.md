@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-08-09
+
 - **Outline-session hardening** (aria twins, uploads, cookie→API):
   - `byAriaLabel` / `clickByAriaLabel`: `preferVisible` option — skip hidden Radix/menu twins; **`clickByAriaLabel` defaults `preferVisible: true`**, falling back to the first match if none are visible
   - `setFilesViaChooser(page, trigger, files)` — wait for `filechooser` then `setFiles` (slash-menu Image / Upload flows)
